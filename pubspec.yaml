@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.0.6 <4.0.0'
+  sdk: '>=2.18.0 <4.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -36,7 +36,12 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   news_api_flutter_package: ^1.1.0
-  flutter_webview_plugin: ^0.4.0
+  cached_network_image: ^3.3.0
+  http: ^0.13.3
+  html: ^0.15.4
+  xml2json: ^6.2.1
+  webview_flutter: ^2.8.0
+  translator: ^0.1.7
 
 dev_dependencies:
   flutter_test:
@@ -61,9 +66,16 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - images/weather.jpg
+    - images/lottery.jpg
+    - images/maps.png
+    - images/translate.png
+    - images/youtube.png
+    - images/calendar.jpg
+    - images/qr.png
+    - images/snake.jpg
+    - images/world.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
