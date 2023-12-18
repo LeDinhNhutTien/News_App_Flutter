@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_news_app/page/home/news_page.dart';
 import 'package:flutter_news_app/page/user/Input.dart';
 import 'package:flutter_news_app/page/user/mybutton.dart';
+import 'package:flutter_news_app/page/user/register.dart';
 import 'package:flutter_news_app/page/user/square.dart';
 import 'package:flutter_news_app/page/widget/home_widget.dart';
 import 'package:flutter_news_app/page/widget/lottery.dart';
@@ -115,17 +116,24 @@ class _LoginState extends State<Login> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Not a account?'),
-                  const SizedBox(width: 4),
-                  Text(
-                    'Register now.',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
+                  Text('Not a member? '),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Register()),
+                      );
+                    },
+                    child: Text(
+                      'Register now.',
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ), // Text
+                  ),
                 ],
-              ), // Row
+              ),
             ],
           ),
         ),
