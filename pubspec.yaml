@@ -42,6 +42,7 @@ dependencies:
   xml2json: ^6.2.1
   webview_flutter: ^2.8.0
   translator: ^0.1.7
+  font_awesome_flutter: ^10.6.0
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +79,7 @@ flutter:
     - images/world.jpg
     - images/github.png
     - images/search.png
+    - images/Account-User-PNG.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
