@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_news_app/page/user/login.dart';
 import 'package:flutter_news_app/page/widget/translate.dart';
 
 import '../home/news_page.dart';
@@ -73,7 +74,7 @@ class _Home_WidgetState extends State<Home_Widget> {
               case 3:
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const Lottery()),
+                  MaterialPageRoute(builder: (context) => Login()),
                 );
                 break;
             }
