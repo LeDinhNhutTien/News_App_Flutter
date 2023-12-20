@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_news_app/page/admin/HomeAdmin.dart';
 import 'package:flutter_news_app/page/home/news_page.dart';
 
 void main() {
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(),
-      home: const NewsPage(),
+      home: const AdminApp(),
     );
   }
 }
