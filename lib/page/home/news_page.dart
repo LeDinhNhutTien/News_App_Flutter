@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_news_app/page/home/news_web_view.dart';
 import 'package:flutter_news_app/page/user/login.dart';
+import 'package:flutter_news_app/page/user/profile.dart';
 
 import 'package:xml2json/xml2json.dart';
 import 'package:http/http.dart' as http;
@@ -152,7 +153,7 @@ class _NewsPageState extends State<NewsPage> {
               // Replace 'YourPersonalPage()' with the widget representing your personal page
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Login()),
+                  MaterialPageRoute(builder: (context) =>const  Profile()),
                 );
                 break;
             }
