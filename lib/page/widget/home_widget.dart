@@ -4,6 +4,7 @@ import 'package:flutter_news_app/page/user/profile.dart';
 import 'package:flutter_news_app/page/widget/translate.dart';
 
 import '../home/news_page.dart';
+import 'chat_screen.dart';
 import 'lottery.dart';
 
 class Home_Widget extends StatefulWidget {
@@ -101,6 +102,7 @@ class MyGrid extends StatelessWidget {
     CellData('images/world.jpg', 'Báo nước ngoài'),
     CellData('images/qr.png', 'Quét mã qr'),
     CellData('images/calendar.jpg', 'Lịch'),
+    CellData('images/chatgpt.jpg', 'ChatGPT'),
     // Add other image paths and names
   ];
 
@@ -212,6 +214,14 @@ class GridCell extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => const Lottery(),
+              ),
+            );
+            break;
+          case 'ChatGPT':
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ChatGptScreen(),
               ),
             );
             break;
