@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_news_app/page/admin/NewsManager.dart';
+import 'package:flutter_news_app/page/admin/TheGioi.dart';
 
+import 'TrongNuoc.dart';
 import 'UserAdmin.dart';
 
 void main() {
@@ -81,13 +83,13 @@ class _AdminHomePageState extends State<AdminHomePage> {
               ),
             ),
           ),
-          if (isMenuOpen) const NavigationDrawer(),
+          if (isMenuOpen)
+            const NavigationDrawer(),
         ],
       ),
     );
   }
 }
-
 class NavigationDrawer extends StatelessWidget {
   const NavigationDrawer({Key? key}) : super(key: key);
 
@@ -107,10 +109,28 @@ class NavigationDrawer extends StatelessWidget {
           ListTile(
             title: const Text('Home'),
             onTap: () {
-              // Xử lý khi nhấp vào menu item 2
+              // Handle when the user taps on the Home menu item
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const AdminApp()),
+              );
+            },
+          ),
+          ListTile(
+            title: const Text('Quản lý báo trong nước'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const TrongNuoc()),
+              );
+            },
+          ),
+          ListTile(
+            title: const Text('Quản lý báo ngoài nước'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const NewsTheGioi()),
               );
             },
           ),
@@ -123,21 +143,15 @@ class NavigationDrawer extends StatelessWidget {
               );
             },
           ),
+
           ListTile(
-            title: const Text('Quản lý báo'),
+            title: const Text('Danh sách bài báo'),
             onTap: () {
-              // Xử lý khi nhấp vào menu item 2
+              // Handle when the user taps on the Danh sách bài báo menu item
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const NewsManager()),
               );
-            },
-          ),
-          ListTile(
-            title: const Text('Menu Item 3'),
-            onTap: () {
-              // Xử lý khi nhấp vào menu item 3
-              Navigator.pop(context);
             },
           ),
         ],
