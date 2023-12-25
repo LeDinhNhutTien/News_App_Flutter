@@ -103,6 +103,7 @@ class MyGrid extends StatelessWidget {
     CellData('images/qr.png', 'Quét mã qr'),
     CellData('images/calendar.jpg', 'Lịch'),
     CellData('images/chatgpt.jpg', 'ChatGPT'),
+    CellData('images/google.png', 'Google'),
     // Add other image paths and names
   ];
 
@@ -222,6 +223,14 @@ class GridCell extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => const ChatGptScreen(),
+              ),
+            );
+            break;
+          case 'Google':
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Home_Widget(),
               ),
             );
             break;

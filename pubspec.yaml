@@ -41,7 +41,7 @@ dependencies:
   http: ^0.13.4
   html: ^0.15.4
   xml2json: ^6.2.1
-  webview_flutter: ^2.8.0
+  webview_flutter: ^2.0.13
   translator: ^0.1.7
   font_awesome_flutter: ^10.6.0
   chat_gpt_sdk: ^2.0.0
