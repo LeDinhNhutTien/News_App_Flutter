@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'NewsManager.dart';
+
+import '../model/NewsArticle.dart';
+import 'TheGioi.dart';
 
 class EditNewsPage extends StatefulWidget {
   final NewsArticle newsArticle;
@@ -59,30 +61,30 @@ class _EditNewsPageState extends State<EditNewsPage> {
             SizedBox(height: 16.0),
             TextField(
               controller: _authorController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Author',
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             TextField(
               controller: _descriptionController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Description',
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             TextField(
               controller: _urlController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'URL',
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
                 showConfirmationDialog();
               },
-              child: Text('Save Changes'),
+              child: const Text('Save Changes'),
             ),
           ],
         ),
@@ -102,14 +104,14 @@ class _EditNewsPageState extends State<EditNewsPage> {
               onPressed: () {
                 Navigator.pop(context); // Close the dialog
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
                 saveChanges();
                 Navigator.pop(context); // Close the dialog
               },
-              child: Text('Save'),
+              child: const Text('Save'),
             ),
           ],
         );
@@ -124,6 +126,8 @@ class _EditNewsPageState extends State<EditNewsPage> {
       author: _authorController.text,
       description: _descriptionController.text,
       url: _urlController.text,
+      type: '',
+      date: '',
     );
 
     // TODO: Save the updated news article to the database or update the existing one

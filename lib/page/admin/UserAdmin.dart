@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../model/Category.dart';
 import 'HomeAdmin.dart';
 import 'NewsManager.dart';
+import 'TheGioi.dart';
+import 'TrongNuoc.dart';
 
 void main() {
   runApp(const UserAdmin());
@@ -218,10 +221,28 @@ class NavigationDrawer extends StatelessWidget {
           ListTile(
             title: const Text('Home'),
             onTap: () {
-              // Xử lý khi nhấp vào menu item 2
+              // Handle when the user taps on the Home menu item
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const AdminApp()),
+              );
+            },
+          ),
+          ListTile(
+            title: const Text('Quản lý báo trong nước'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const TrongNuoc()),
+              );
+            },
+          ),
+          ListTile(
+            title: const Text('Quản lý báo ngoài nước'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const NewsTheGioi()),
               );
             },
           ),
@@ -234,21 +255,15 @@ class NavigationDrawer extends StatelessWidget {
               );
             },
           ),
+
           ListTile(
-            title: const Text('Quản lý báo'),
+            title: const Text('Danh sách bài báo'),
             onTap: () {
-              // Xử lý khi nhấp vào menu item 2
+              // Handle when the user taps on the Danh sách bài báo menu item
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const NewsManager()),
               );
-            },
-          ),
-          ListTile(
-            title: const Text('Menu Item 3'),
-            onTap: () {
-              // Xử lý khi nhấp vào menu item 3
-              Navigator.pop(context);
             },
           ),
         ],
@@ -256,7 +271,6 @@ class NavigationDrawer extends StatelessWidget {
     );
   }
 }
-
 class User {
   final String name;
   final String email;
