@@ -78,88 +78,88 @@ class _NewsPageState extends State<NewsPage> {
       appBar: isSearching ? searchAppBar() : appBar(),
       body: SafeArea(
           child: Column(
-        children: [
-          _buildCategories(),
-          Expanded(
-            child: FutureBuilder(
-              future: getNewsData(chooseLink),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasError) {
-                  return const Center(
-                    child: Text("Error loading the news"),
-                  );
-                } else {
-                  return _buildNewsListView();
-                }
-              },
-            ),
-          )
-        ],
-      )),
+            children: [
+              _buildCategories(),
+              Expanded(
+                child: FutureBuilder(
+                  future: getNewsData(chooseLink),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (snapshot.hasError) {
+                      return const Center(
+                        child: Text("Error loading the news"),
+                      );
+                    } else {
+                      return _buildNewsListView();
+                    }
+                  },
+                ),
+              )
+            ],
+          )),
       bottomNavigationBar: BottomNavigationBar(
         fixedColor: Colors.black,
-          type: BottomNavigationBarType.fixed,
-          items: const [
-            BottomNavigationBarItem(
+        type: BottomNavigationBarType.fixed,
+        items: const [
+          BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'Home'
-            ),BottomNavigationBarItem(
-                icon: Icon(Icons.widgets),
-                label: 'Widget'
-            ),
-            BottomNavigationBarItem(
+          ),BottomNavigationBarItem(
+              icon: Icon(Icons.widgets),
+              label: 'Widget'
+          ),
+          BottomNavigationBarItem(
               icon: Icon(Icons.history),
-                label: 'History'
-            ),
-            BottomNavigationBarItem(
+              label: 'History'
+          ),
+          BottomNavigationBarItem(
               icon: Icon(Icons.person),
-                label: 'Personal'
-            ),
-      ],
-          currentIndex: _currentIndex,
+              label: 'Personal'
+          ),
+        ],
+        currentIndex: _currentIndex,
         onTap: (index){
-            // Use Navigator to navigate to the corresponding pages
-            switch (index) {
-              case 0:
-              // Navigate to the Home page
-              // Replace 'YourHomePage()' with the widget representing your home page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const NewsPage()),
-                );
-                break;
-              case 1:
-              // Navigate to the History page
-              // Replace 'YourHistoryPage()' with the widget representing your history page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Home_Widget()),
-                );
-                break;
-              case 2:
-              // Navigate to the Personal page
-              // Replace 'YourPersonalPage()' with the widget representing your personal page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Lottery()),
-                );
-                break;
-              case 3:
-              // Navigate to the Personal page
-              // Replace 'YourPersonalPage()' with the widget representing your personal page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) =>const  Profile()),
-                );
-                break;
-            }
-            setState(() {
-              _currentIndex = index;
-            });
+          // Use Navigator to navigate to the corresponding pages
+          switch (index) {
+            case 0:
+            // Navigate to the Home page
+            // Replace 'YourHomePage()' with the widget representing your home page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const NewsPage()),
+              );
+              break;
+            case 1:
+            // Navigate to the History page
+            // Replace 'YourHistoryPage()' with the widget representing your history page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Home_Widget()),
+              );
+              break;
+            case 2:
+            // Navigate to the Personal page
+            // Replace 'YourPersonalPage()' with the widget representing your personal page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Lottery()),
+              );
+              break;
+            case 3:
+            // Navigate to the Personal page
+            // Replace 'YourPersonalPage()' with the widget representing your personal page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) =>const  Profile()),
+              );
+              break;
+          }
+          setState(() {
+            _currentIndex = index;
+          });
         },
       ),
     );
@@ -175,7 +175,7 @@ class _NewsPageState extends State<NewsPage> {
             isSearching = false;
             searchTerm = null;
             searchController.text = "";
-             future = getNewsData(chooseLink);
+            future = getNewsData(chooseLink);
           });
         },
       ),
@@ -256,15 +256,15 @@ class _NewsPageState extends State<NewsPage> {
                         (BuildContext context) => NewsWebView(url: topStories[index]['link']['\$t']
                     )));
               },
-                horizontalTitleGap: 10,
-                minVerticalPadding: 10,
-                contentPadding: const EdgeInsets.symmetric(
-                    vertical: 10, horizontal: 10),
-                title: Text(topStories[index]['title']['\$t'],
-                    maxLines: 2, overflow: TextOverflow.ellipsis
-                ),
-                subtitle: Text(
-                  date.substring(5, date.length-9),
+              horizontalTitleGap: 10,
+              minVerticalPadding: 10,
+              contentPadding: const EdgeInsets.symmetric(
+                  vertical: 10, horizontal: 10),
+              title: Text(topStories[index]['title']['\$t'],
+                  maxLines: 2, overflow: TextOverflow.ellipsis
+              ),
+              subtitle: Text(
+                date.substring(5, date.length-9),
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -333,10 +333,10 @@ class _NewsPageState extends State<NewsPage> {
               },
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(
-                categoryItems[index] == selectedCategory
-                    ? Colors.blue.withOpacity(0.5)
-                    : Colors.blue,
-              )),
+                    categoryItems[index] == selectedCategory
+                        ? Colors.blue.withOpacity(0.5)
+                        : Colors.blue,
+                  )),
               child: Text(categoryItems[index]),
             ),
           );

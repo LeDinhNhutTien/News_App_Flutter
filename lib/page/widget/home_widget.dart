@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_news_app/page/user/login.dart';
 import 'package:flutter_news_app/page/user/profile.dart';
+import 'package:flutter_news_app/page/widget/QRCode/QRScannerPage.dart';
 import 'package:flutter_news_app/page/widget/translate.dart';
 
 import '../home/news_page.dart';
+import 'QRCode/Youtobe.dart';
 import 'chat_screen.dart';
 import 'lottery.dart';
 
@@ -173,7 +175,7 @@ class GridCell extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const Lottery(),
+                builder: (context) =>const Youtube(),
               ),
             );
             break;
@@ -205,7 +207,7 @@ class GridCell extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const Translator(),
+                builder: (context) =>  QRCodeGenerator(),
               ),
             );
             break;
