@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_news_app/page/admin/NewsManager.dart';
-import 'package:flutter_news_app/page/admin/TheGioi.dart';
+import 'package:flutter_news_app/page/admin/managmentNews/NewsManager.dart';
 
-import 'TrongNuoc.dart';
-import 'UserAdmin.dart';
+import 'loadNews/TrongNuoc.dart';
+import 'managmentUser/UserAdmin.dart';
 
 void main() {
   runApp(const AdminApp());
@@ -72,13 +71,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       fontSize: 18,
                     ),
                   ),
-                  Text(
-                    "Hello Nhung ngu nè",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
+
                 ],
               ),
             ),
@@ -117,20 +110,11 @@ class NavigationDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            title: const Text('Quản lý báo trong nước'),
+            title: const Text('Duyệt báo mới'),
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const TrongNuoc()),
-              );
-            },
-          ),
-          ListTile(
-            title: const Text('Quản lý báo ngoài nước'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const NewsTheGioi()),
               );
             },
           ),
