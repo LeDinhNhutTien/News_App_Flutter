@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_news_app/page/user/login.dart';
 import 'package:flutter_news_app/page/user/profile.dart';
 import 'package:flutter_news_app/page/widget/translate.dart';
+import 'package:flutter_news_app/page/widget/weather_app.dart';
 
 import '../home/news_page.dart';
 import 'chat_screen.dart';
+import 'game_snake.dart';
 import 'lottery.dart';
 
 class Home_Widget extends StatefulWidget {
@@ -93,12 +95,12 @@ class _Home_WidgetState extends State<Home_Widget> {
 
 class MyGrid extends StatelessWidget {
   final List<CellData> cellDataList = [
-    CellData('images/weather.jpg', 'Thời tiết'),
     CellData('images/lottery.jpg', 'Sổ xố'),
     CellData('images/maps.png', 'Google map'),
     CellData('images/youtube.png', 'Youtube'),
     CellData('images/translate.png', 'Google dịch'),
     CellData('images/snake.jpg', 'Game rắn'),
+    CellData('images/weather.jpg', 'Thời tiết'),
     CellData('images/world.jpg', 'Báo nước ngoài'),
     CellData('images/qr.png', 'Quét mã qr'),
     CellData('images/calendar.jpg', 'Lịch'),
@@ -145,14 +147,6 @@ class GridCell extends StatelessWidget {
       onTap: () {
         // Navigate to different screens based on the 'name'
         switch (name) {
-          case 'Thời Tiết':
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const Lottery(),
-              ),
-            );
-            break;
           case 'Sổ xố':
             Navigator.push(
               context,
@@ -189,7 +183,15 @@ class GridCell extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const Lottery(),
+                builder: (context) => const GameSnake(),
+              ),
+            );
+            break;
+          case 'Thời tiết':
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const WeatherApp(),
               ),
             );
             break;
