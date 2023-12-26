@@ -4,6 +4,11 @@ import '../model/NewsArticle.dart';
 import 'package:xml/xml.dart' as xml;
 
 class NewsApi {
+  static String urlGetAll ="http://192.168.2.15/server/getAllNews.php";
+  static String urlArticleExistsInDatabase ="http://192.168.2.15/server/checkTitleAndCreate.php";
+  static String urlSaveNewsArticle ="http://192.168.2.15/server/saveNews.php";
+  static String urlDeleteNewsArticle ="'http://192.168.2.15/server/deleteNews.php'";
+  static String urlUpdateNewsArticle ="''http://192.168.2.15/server/updateNews.php''";
   static String extractPubDate(xml.XmlElement item) {
     var pubDateElement = item.findElements('pubDate').single;
     var pubDateText = pubDateElement.text;
@@ -68,7 +73,7 @@ class NewsApi {
   }
 
   static Future<bool> articleExistsInDatabase(String title, String createAt) async {
-    var url = Uri.parse('http://192.168.2.15/server/checkTitleAndCreate.php');
+    var url = Uri.parse(urlArticleExistsInDatabase);
     var response = await http.post(url, body: {'title': title, 'create_at': createAt});
 
     if (response.statusCode == 200) {
@@ -107,7 +112,7 @@ class NewsApi {
 
   }
   static Future<void> saveNewsArticle(NewsArticle article) async {
-    var url = Uri.parse('http://192.168.2.15/server/saveNews.php');
+    var url = Uri.parse(urlSaveNewsArticle);
 
     var response = await http.post(url, body: article.toJson());
 
@@ -118,7 +123,7 @@ class NewsApi {
     }
   }
   static Future<void> updateNewsArticle(NewsArticle article, String oldTitle) async {
-    var url = Uri.parse('http://192.168.2.15/server/updateNews.php');
+    var url = Uri.parse(urlUpdateNewsArticle);
 
     var response = await http.post(url, body: article.toJsonForUpdate(oldTitle));
 
@@ -129,7 +134,7 @@ class NewsApi {
     }
   }
   static Future<void> deleteNewsArticle(NewsArticle article) async {
-    var url = Uri.parse('http://192.168.2.15/server/deleteNews.php');
+    var url = Uri.parse(urlDeleteNewsArticle);
 
     var response = await http.post(url, body: article.toJsonForDelete());
 
@@ -140,7 +145,7 @@ class NewsApi {
     }
   }
   static Future<List<NewsArticle>> getNewsArticles() async {
-    var url = Uri.parse('http://192.168.2.15/server/getAllNews.php');
+    var url = Uri.parse(urlGetAll);
 
     var response = await http.get(url);
 
@@ -159,23 +164,4 @@ class NewsApi {
     }
   }
 }
-Future<List<NewsArticle>> fetchDataDB() async {
-  try {
-    final url = Uri.parse('http://192.168.2.15/server/getAllNews.php');
-    final response = await http.get(url);
 
-    if (response.statusCode == 200) {
-      final jsonList = json.decode(response.body) as List<dynamic>;
-      List<NewsArticle> articles = jsonList.map((json) => NewsArticle.fromJsonDB(json)).toList();
-      return articles;
-    } else {
-      // Handle error response
-      print('Failed to fetch data. Error: ${response.statusCode}');
-      return []; // Return an empty list in case of an error
-    }
-  } catch (e) {
-    // Handle network or other exceptions
-    print('Failed to fetch data. Exception: $e');
-    return []; // Return an empty list in case of an exception
-  }
-}
