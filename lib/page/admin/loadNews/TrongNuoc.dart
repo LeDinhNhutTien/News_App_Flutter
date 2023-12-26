@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_news_app/page/admin/TrongNuoc.dart';
+import 'package:flutter_news_app/page/PHP/RssItem.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../PHP/GetAllNews.dart';
-import '../model/Category.dart';
-import '../model/NewsApi.dart';
-import '../model/NewsArticle.dart';
+import '../../model/Category.dart';
+import '../../PHP/NewsApi.dart';
+import '../../model/NewsArticle.dart';
 import 'EditNewsPage.dart';
-import 'HomeAdmin.dart';
-import 'NewsManager.dart';
-import 'UserAdmin.dart';
+import '../HomeAdmin.dart';
+import '../managmentNews/NewsManager.dart';
+import '../managmentUser/UserAdmin.dart';
 
 void main() {
-  runApp(const NewsTheGioi());
+  runApp(const TrongNuoc());
 }
 
-class NewsTheGioi extends StatelessWidget {
-  const NewsTheGioi({Key? key}) : super(key: key);
+class TrongNuoc extends StatelessWidget {
+  const TrongNuoc({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +39,7 @@ class _NewsListPageState extends State<NewsListPage> {
   List<NewsArticle> list = [];
   bool isLoading = false;
   bool isMenuOpen = false;
+  String selectedCategory = Category.categories[0]; // Default selected category
 
   // List to store selected articles
   List<NewsArticle> selectedArticles = [];
@@ -70,70 +70,82 @@ class _NewsListPageState extends State<NewsListPage> {
         children: [
           Container(
             color: Colors.grey[200],
-            child: ListView.builder(
-              itemCount: list.length,
-              itemBuilder: (context, index) {
-                final article = list[index];
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ListTile(
-                      leading: Image.network(
-                        article.image,
-                        width: 60,
-                        height: 60,
-                        fit: BoxFit.cover,
-                      ),
-                      title: Text(article.title),
-                      subtitle: Column(
+            child: Column(
+              children: [
+                _buildCategoryFilter(),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: list.length,
+                    itemBuilder: (context, index) {
+                      final article = list[index];
+                      // Apply category filter
+                      if (selectedCategory != "All" &&
+                          article.type != selectedCategory) {
+                        return const SizedBox();
+                      }
+
+                      return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Author: ${article.author}'),
-                          Text('Description: ${article.description}'),
-                          Text('published date: ${article.date}'),
-                          Text('Type: ${article.type}'),
-                          GestureDetector(
-                            child: Text(
-                              'URL: ${article.url}',
-                              style: const TextStyle(
-                                color: Colors.blue,
-                                decoration: TextDecoration.underline,
+                          ListTile(
+                            leading: Image.network(
+                              article.image,
+                              width: 60,
+                              height: 60,
+                              fit: BoxFit.cover,
+                            ),
+                            title: Text(article.title),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Author: ${article.author}'),
+                                Text('Description: ${article.description}'),
+                                Text('published date: ${article.date}'),
+                                Text('Type: ${article.type}'),
+                                GestureDetector(
+                                  child: Text(
+                                    'URL: ${article.url}',
+                                    style: const TextStyle(
+                                      color: Colors.blue,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    _openArticle(article.url, context);
+                                  },
+                                ),
+                              ],
+                            ),
+                            tileColor: selectedArticles.contains(article)
+                                ? Colors.blue[50]
+                                : null,
+                            onTap: () {
+                              _selectArticle(
+                                  !selectedArticles.contains(article), article);
+                            },
+                            trailing: GestureDetector(
+                              onTap: () {
+                                _selectArticle(
+                                    !selectedArticles.contains(article),
+                                    article);
+                              },
+                              child: Checkbox(
+                                value: selectedArticles.contains(article),
+                                onChanged: (value) {
+                                  _selectArticle(value!, article);
+                                },
                               ),
                             ),
-
-                            onTap: () {
-                              _openArticle(article.url, context);
+                            onLongPress: () {
+                              _editArticle(article);
                             },
                           ),
-
                         ],
-                      ),
-                      tileColor: selectedArticles.contains(article)
-                          ? Colors.blue[50]
-                          : null,
-                      onTap: () {
-                        _selectArticle(
-                            !selectedArticles.contains(article), article);
-                      },
-                      trailing: GestureDetector(
-                        onTap: () {
-                          _selectArticle(
-                              !selectedArticles.contains(article), article);
-                        },
-                        child: Checkbox(
-                          value: selectedArticles.contains(article),
-                          onChanged: (value) {
-                            _selectArticle(value!, article);
-                          },
-                        ),
-                      ),
-                      onLongPress: () {
-                        _editArticle(article);
-                      },
-                    ),
-                  ],
-                );
-              },
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
           if (isMenuOpen) const NavigationDrawer(),
@@ -150,6 +162,34 @@ class _NewsListPageState extends State<NewsListPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _saveData,
         child: const Icon(Icons.save),
+      ),
+    );
+  }
+
+  Widget _buildCategoryFilter() {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        children: [
+          const Text('Category: '),
+          DropdownButton<String>(
+            value: selectedCategory,
+            onChanged: (String? newValue) {
+              setState(() {
+                selectedCategory = newValue!;
+              });
+            },
+            items: [
+
+              ...Category.categories.map((category) {
+                return DropdownMenuItem<String>(
+                  value: category,
+                  child: Text(category),
+                );
+              }).toList(),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -204,7 +244,7 @@ class _NewsListPageState extends State<NewsListPage> {
 
     selectedArticles.clear();
 
-    NewsApi.fetchArticles().then((articles) {
+    NewsApi.fetchNews(RssItem.rssItems).then((articles) {
       setState(() {
         isLoading = false;
         list = articles;
@@ -240,7 +280,7 @@ class _NewsListPageState extends State<NewsListPage> {
     });
   }
 
-  void _saveData() {
+  void _saveData() async {
     List<NewsArticle> savedArticles = [];
     savedArticles.addAll(selectedArticles);
 
@@ -250,6 +290,11 @@ class _NewsListPageState extends State<NewsListPage> {
     });
 
     selectedArticles.clear();
+
+    // Gọi hàm lưu dữ liệu cho từng article
+    for (var article in savedArticles) {
+      NewsApi.saveNewsArticle(article);
+    }
 
     showDialog(
       context: context,
@@ -274,6 +319,7 @@ class _NewsListPageState extends State<NewsListPage> {
     );
   }
 }
+
 class NavigationDrawer extends StatelessWidget {
   const NavigationDrawer({Key? key}) : super(key: key);
 
@@ -301,20 +347,11 @@ class NavigationDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            title: const Text('Quản lý báo trong nước'),
+            title: const Text('Duyệt báo mới'),
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const TrongNuoc()),
-              );
-            },
-          ),
-          ListTile(
-            title: const Text('Quản lý báo ngoài nước'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const NewsTheGioi()),
               );
             },
           ),
@@ -343,3 +380,4 @@ class NavigationDrawer extends StatelessWidget {
     );
   }
 }
+
