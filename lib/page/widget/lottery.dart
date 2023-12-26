@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:webview_flutter/webview_flutter.dart';
 void main() {
   runApp(const Lottery());
 }
@@ -26,7 +26,11 @@ class _LotteryState extends State<Lottery> {
                   },
                   icon: const Icon(Icons.search)),
             ],
-        )
+        ),
+      body: const WebView(
+      initialUrl: 'https://xosohomnay.com.vn/',
+      javascriptMode: JavascriptMode.unrestricted,
+    ),
     );
   }
 }

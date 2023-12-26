@@ -150,7 +150,7 @@ class _TranslatorAppState extends State<Translator> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(40),
                 margin: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                     color: Colors.blueGrey.withOpacity(0.3),
@@ -235,7 +235,7 @@ class _TranslatorAppState extends State<Translator> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(55),
                 margin: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                     color: Colors.blueGrey.withOpacity(0.3),
@@ -246,7 +246,7 @@ class _TranslatorAppState extends State<Translator> {
                     data,
                     style: const TextStyle(
                         color: Colors.black,
-                        fontSize: 20,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -257,7 +257,7 @@ class _TranslatorAppState extends State<Translator> {
                       backgroundColor:
                       MaterialStatePropertyAll(Color.fromARGB(
                           255, 213, 191, 162)),
-                      fixedSize: MaterialStatePropertyAll(Size(300, 45))),
+                      fixedSize: MaterialStatePropertyAll(Size(300, 55))),
                   child:isloading?const SizedBox.square(
                     dimension: 20,
                     child: CircularProgressIndicator(color: Colors.blueGrey,),
