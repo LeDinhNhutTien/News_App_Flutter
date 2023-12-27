@@ -12,11 +12,11 @@ class SearchPlacesScreen extends StatefulWidget {
   State<SearchPlacesScreen> createState() => _SearchPlacesScreenState();
 }
 
-const kGoogleApiKey = 'YOUR_GOOGLE_API_KEY_HERE';
+const kGoogleApiKey = 'AIzaSyCUvthbHyxWeri9GQG7u_MfmD1F2nTig20';
 final homeScaffoldKey = GlobalKey<ScaffoldState>();
 
 class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
-  static const CameraPosition initialCameraPosition = CameraPosition(target: LatLng(37.42796, -122.08574), zoom: 14.0);
+  static const CameraPosition initialCameraPosition = CameraPosition(target: LatLng(10.8712764, 106.7891868), zoom: 17.0);
 
   Set<Marker> markersList = {};
 

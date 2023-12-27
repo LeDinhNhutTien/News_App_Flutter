@@ -15,7 +15,7 @@ class PolylineScreen extends StatefulWidget {
 }
 
 class _PolylineScreenState extends State<PolylineScreen> {
-  static const CameraPosition initialPosition = CameraPosition(target: LatLng(31.51110801, 74.27774), zoom: 14);
+  static const CameraPosition initialPosition = CameraPosition(target: LatLng(10.8712764, 106.7891868), zoom: 17);
 
   final Completer<GoogleMapController> _controller = Completer();
 
