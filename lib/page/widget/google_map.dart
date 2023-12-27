@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_news_app/page/widget/screens/current_location_screen.dart';
-import 'package:flutter_news_app/page/widget/screens/nearby_places_screen.dart';
-import 'package:flutter_news_app/page/widget/screens/search_places_screen.dart';
-import 'package:flutter_news_app/page/widget/screens/simple_map_screen.dart';
+import 'package:flutter_news_app/page/widget/google_map_screens/current_location_screen.dart';
+import 'package:flutter_news_app/page/widget/google_map_screens/nearby_places_screen.dart';
+import 'package:flutter_news_app/page/widget/google_map_screens/search_places_screen.dart';
+import 'package:flutter_news_app/page/widget/google_map_screens/simple_map_screen.dart';
 
-import 'screens/polyline_screen.dart';
+import 'google_map_screens/polyline_screen.dart';
 
 class GoogleMap extends StatefulWidget {
   const GoogleMap({Key? key}) : super(key: key);

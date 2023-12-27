@@ -11,6 +11,7 @@ import 'chat_screen.dart';
 import 'game_snake.dart';
 import 'lottery.dart';
 import 'news_foreign.dart';
+import 'calendar.dart';
 
 class Home_Widget extends StatefulWidget {
   const Home_Widget({super.key});
@@ -219,7 +220,7 @@ class GridCell extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const Lottery(),
+                builder: (context) => const Calendar(),
               ),
             );
             break;
