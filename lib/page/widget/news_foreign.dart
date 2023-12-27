@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:news_api_flutter_package/model/article.dart';
 import 'package:news_api_flutter_package/news_api_flutter_package.dart';
 
-import 'NewsDetailScreen.dart';
+import '../home/news_web_view.dart';
 
 class NewsForeign extends StatefulWidget {
   const NewsForeign({super.key});
@@ -12,25 +12,29 @@ class NewsForeign extends StatefulWidget {
   State<NewsForeign> createState() => _NewsForeignState();
 }
 
+
 class _NewsForeignState extends State<NewsForeign> {
   late Future<List<Article>> future;
   String? searchTerm;
   bool isSearching  = false;
   TextEditingController searchController = TextEditingController();
-  void _navigateToDetail(Article article) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => NewsDetailScreen(article: article),
-      ),
-    );
-  }
+  List<String> categoryItems = [
+    "GRNERAL",
+    "BUSINESS",
+    "ENTERTAINMENT",
+    "HEALTH",
+    "SCIENCE",
+    "SPORTS",
+    "TECHNOLOGY",
+  ];
 
+  late String selectedCategory;
 
   @override
   void initState() {
-
+    selectedCategory = categoryItems[0];
     future = getNewsData();
+
     super.initState();
   }
 
@@ -39,6 +43,7 @@ class _NewsForeignState extends State<NewsForeign> {
     return await newsAPI.getTopHeadlines(
       country: "us",
       query: searchTerm,
+      category: selectedCategory,
     );
   }
 
@@ -50,6 +55,7 @@ class _NewsForeignState extends State<NewsForeign> {
       body: SafeArea(
         child: Column(
           children: [
+            _buildCategories(),
             Expanded(
                 child: FutureBuilder(
                   builder: (context, snapshot){
@@ -144,46 +150,86 @@ class _NewsForeignState extends State<NewsForeign> {
   }
 
   Widget _buildNewsItem(Article article){
-    return GestureDetector(
-        onTap: () {
-          _navigateToDetail(article);
-        },
-    child: Card(
-      elevation: 4,
-      child: Padding(
-    padding: EdgeInsets.all(8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: 80,
-              width: 80,
-            child: Image.network(article.urlToImage ?? "",
-            fit:  BoxFit.fitHeight,
-            errorBuilder: (context, error, stackTrace){
-              return const Icon(Icons.image_not_supported);
-            },),
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NewsWebView(url: article.url!),
           ),
-          const SizedBox(width: 20),
-          Expanded(
-              child: Column(
-             mainAxisAlignment: MainAxisAlignment.start,
-             crossAxisAlignment: CrossAxisAlignment.start,
+        );
+
+      },
+      child: Card(
+        elevation: 4,
+        child: Padding(
+          padding: EdgeInsets.all(8),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(article.title!,
-              maxLines: 2,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
+              SizedBox(
+                height: 80,
+                width: 80,
+                child: Image.network(article.urlToImage ?? "",
+                  fit:  BoxFit.fitHeight,
+                  errorBuilder: (context, error, stackTrace){
+                    return const Icon(Icons.image_not_supported);
+                  },),
               ),
-              ),
-              Text(article.source.name!,
-              style: const TextStyle(color: Colors.grey),),
+              const SizedBox(width: 20),
+              Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(article.title!,
+                        maxLines: 2,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                      Text(article.source.name!,
+                        style: const TextStyle(color: Colors.grey),),
+                    ],
+                  ))
             ],
-          ))
-        ],
-      ),),
-    )
+          ),),
+      ),
     );
+  }
+
+
+  Widget _buildCategories(){
+
+    return SizedBox(
+      height: 60,
+      child: ListView.builder(
+          itemBuilder: (context, index){
+            return Padding(
+                padding: const EdgeInsets.all(8),
+            child: ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  selectedCategory = categoryItems[index];
+                  future = getNewsData();
+                });
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(
+                  categoryItems[index] == selectedCategory
+                      ? Colors.green.withOpacity(0.5)
+                      : Colors.green,
+                )
+              ),
+              child: Text(categoryItems[index]),
+            ),
+            );
+    },
+        itemCount: categoryItems.length,
+        scrollDirection: Axis.horizontal,
+    ),
+    );
+
   }
 }
