@@ -17,6 +17,9 @@ class _WeatherAppState extends State<WeatherApp> {
   final WeatherFactory _wf = WeatherFactory(OPENWEATHER_API_KEY);
   Weather? _weather;
   String _selectedLocation = "Ho Chi Minh,VietNam";
+  String _cityInput = "";
+  TextEditingController _cityController = TextEditingController();
+
 
   @override
   void initState() {
@@ -32,9 +35,20 @@ class _WeatherAppState extends State<WeatherApp> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.green,
+        title: const Text("Weather App"),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context); // Khi người dùng nhấn biểu tượng quay lại, quay lại màn hình trước đó
+          },
+        ),
+      ),
       body: _buildUI(),
     );
   }
@@ -53,7 +67,7 @@ class _WeatherAppState extends State<WeatherApp> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          _locationDropdown(),
+          _locationInput(), // Thay thế dropdown thành ô nhập liệu
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.02,
           ),
@@ -93,40 +107,52 @@ class _WeatherAppState extends State<WeatherApp> {
     );
   }
 
-  Widget _locationDropdown() {
-    return DropdownButton<String>(
-      value: _selectedLocation,
-      onChanged: (newValue) {
-        setState(() {
-          _selectedLocation = newValue!;
-        });
-      },
-      items: [
-        "Ho Chi Minh,VietNam",
-        "Hanoi,VietNam",
-        "Singapore",
-        "New York",
-        "Paris",
-        "Tokyo",
-
-        // Add other locations if needed
-      ].map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
+  Widget _locationInput() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: TextField(
+        controller: _cityController,
+        onChanged: (value) {
+          _cityInput = value;
+        },
+        style: TextStyle(fontSize: 18),
+        decoration: InputDecoration(
+          labelText: 'Nhập thành phố',
+          hintText: 'Ví dụ: Ho Chi Minh',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: Colors.blue),
+          ),
+          contentPadding: EdgeInsets.symmetric(vertical: 14),
+          prefixIcon: Icon(Icons.location_city),
+          suffixIcon: IconButton(
+            icon: Icon(Icons.clear),
+            onPressed: () {
+              setState(() {
+                _cityController.clear(); // Xóa nội dung của TextField
+                _cityInput = ''; // Xóa giá trị lưu trữ
+              });
+            },
+          ),
+        ),
+      ),
     );
   }
+
+
   // cập nhật thời tiết
   Widget _updateButton() {
     return ElevatedButton(
       onPressed: () {
-        _updateWeather(_selectedLocation);
+        _updateWeather(_cityInput);
       },
       child: Text("Cập nhật"),
     );
   }
+
 // hiển thị ngày và giờ
   Widget _dateTimeInfo() {
     DateTime now = _weather!.date!;

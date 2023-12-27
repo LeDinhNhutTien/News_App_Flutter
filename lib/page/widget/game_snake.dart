@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:js';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
@@ -11,7 +10,6 @@ class GameSnake  extends StatefulWidget {
   @override
   State<GameSnake> createState() => _GameSnakeState();
 }
-
 enum Direction{up , down, left, right}
 
 class _GameSnakeState extends State<GameSnake> {
@@ -120,6 +118,16 @@ class _GameSnakeState extends State<GameSnake> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.green,
+        title: const Text("Snake Game"),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context); // Khi người dùng nhấn biểu tượng quay lại, quay lại màn hình trước đó
+          },
+        ),
+      ),
       body: Column(
         children: [Expanded(child: _buildGameView()), _buildGameControls()],
       ),
