@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_news_app/page/user/profile.dart';
 import 'package:flutter_news_app/page/widget/QRCode/QRScannerPage.dart';
+import 'package:flutter_news_app/page/widget/google_map.dart';
 import 'package:flutter_news_app/page/widget/translate.dart';
 import 'package:flutter_news_app/page/widget/weather_app.dart';
 
@@ -162,7 +163,7 @@ class GridCell extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const Lottery(),
+                builder: (context) => const GoogleMap(),
               ),
             );
             break;

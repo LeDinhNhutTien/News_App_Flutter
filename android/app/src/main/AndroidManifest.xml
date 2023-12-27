@@ -7,6 +7,8 @@
         android:name="${applicationName}"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCUvthbHyxWeri9GQG7u_MfmD1F2nTig20"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

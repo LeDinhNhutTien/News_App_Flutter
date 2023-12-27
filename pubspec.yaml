@@ -52,6 +52,11 @@ dependencies:
   font_awesome_flutter: ^10.6.0
   chat_gpt_sdk: ^2.0.0
   dash_chat_2: ^0.0.18
+  google_maps_flutter: ^2.5.0
+  geolocator: ^10.1.0
+  flutter_google_places: ^0.3.0
+  awesome_snackbar_content: ^0.0.8
+
 #  phiên bản thư viện weather
   weather: ^3.0.0
 #xử lý quốc tế hóa, bao gồm định dạng số, ngày tháng, và ngôn ngữ
