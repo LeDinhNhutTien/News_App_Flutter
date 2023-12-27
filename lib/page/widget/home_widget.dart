@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_news_app/page/user/login.dart';
 import 'package:flutter_news_app/page/user/profile.dart';
 import 'package:flutter_news_app/page/widget/QRCode/QRScannerPage.dart';
 import 'package:flutter_news_app/page/widget/translate.dart';
@@ -231,14 +230,7 @@ class GridCell extends StatelessWidget {
               ),
             );
             break;
-          case 'Google':
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const Home_Widget(),
-              ),
-            );
-            break;
+
         // Add more cases for other items
           default: Navigator.push(
             context,

@@ -197,7 +197,7 @@ class _WeatherAppState extends State<WeatherApp> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
-          height: MediaQuery.of(context).size.height * 0.20,
+          height: MediaQuery.of(context).size.height * 0.15,
           decoration: BoxDecoration(
             image: DecorationImage(
               image: NetworkImage(
@@ -221,7 +221,7 @@ class _WeatherAppState extends State<WeatherApp> {
       "${_weather?.temperature?.celsius?.toStringAsFixed(0)}° C",
       style: const TextStyle(
         color: Colors.black,
-        fontSize: 90,
+        fontSize: 80,
         fontWeight: FontWeight.w500,
       ),
     );
@@ -229,7 +229,7 @@ class _WeatherAppState extends State<WeatherApp> {
 
   Widget _extraInfo() {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.15,
+      height: MediaQuery.of(context).size.height * 0.1,
       width: MediaQuery.of(context).size.width * 0.80,
       decoration: BoxDecoration(
         color: Colors.deepPurpleAccent,
