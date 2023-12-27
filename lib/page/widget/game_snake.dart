@@ -10,7 +10,6 @@ class GameSnake  extends StatefulWidget {
   @override
   State<GameSnake> createState() => _GameSnakeState();
 }
-
 enum Direction{up , down, left, right}
 
 class _GameSnakeState extends State<GameSnake> {
