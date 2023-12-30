@@ -57,6 +57,12 @@ dependencies:
   flutter_google_places: ^0.3.0
   awesome_snackbar_content: ^0.0.8
   table_calendar: ^3.0.9
+  audioplayers: ^5.2.1
+  on_audio_query: ^2.9.0
+  permission_handler: ^11.1.0
+  just_audio: ^0.9.36
+  just_audio_background: ^0.0.1-beta.11
+  provider: ^6.1.1
 
 #  phiên bản thư viện weather
   weather: ^3.0.0
@@ -100,6 +106,10 @@ flutter:
     - images/search.png
     - images/Account-User-PNG.png
     - images/chatgpt.jpg
+    - images/google.png
+    - images/music.png
+    - images/
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

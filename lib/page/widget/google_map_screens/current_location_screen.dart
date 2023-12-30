@@ -20,7 +20,7 @@ class _CurrentLocationScreenState extends State<CurrentLocationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("User current location"),
+        title: const Text("Vị trí hiện tại của người dùng"),
         centerTitle: true,
       ),
       body: GoogleMap(
@@ -47,7 +47,7 @@ class _CurrentLocationScreenState extends State<CurrentLocationScreen> {
           setState(() {});
 
         },
-        label: const Text("Current Location"),
+        label: const Text("Vị trí hiện tại"),
         icon: const Icon(Icons.location_history),
       ),
     );

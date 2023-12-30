@@ -35,7 +35,7 @@ class _SimpleMapScreenState extends State<SimpleMapScreen> {
         onPressed: () {
           goToLake();
         },
-        label: const Text("To the lake!"),
+        label: const Text("Đi đến hồ!"),
         icon: const Icon(Icons.directions_boat),
       ),
     );

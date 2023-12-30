@@ -18,7 +18,7 @@ class _GoogleMapState extends State<GoogleMap> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Flutter Google Maps"),
+        title: const Text("Google Maps"),
         centerTitle: true,
       ),
       body: SizedBox(
@@ -35,27 +35,27 @@ class _GoogleMapState extends State<GoogleMap> {
               Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
                 return const CurrentLocationScreen();
               }));
-            }, child: const Text("User current location")),
+            }, child: const Text("Vị trí hiện tại")),
 
-            ElevatedButton(onPressed: (){
-              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
-                return const SearchPlacesScreen();
-              }));
-            }, child: const Text("Search Places")),
-
-
-            ElevatedButton(onPressed: (){
-              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
-                return const NearByPlacesScreen();
-              }));
-            }, child: const Text("Near by Places")),
+            // ElevatedButton(onPressed: (){
+            //   Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
+            //     return const SearchPlacesScreen();
+            //   }));
+            // }, child: const Text("Tìm kiếm địa điểm")),
 
 
-            ElevatedButton(onPressed: (){
-              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
-                return const PolylineScreen();
-              }));
-            }, child: const Text("Polyline between 2 points"))
+            // ElevatedButton(onPressed: (){
+            //   Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
+            //     return const NearByPlacesScreen();
+            //   }));
+            // }, child: const Text("Near by Places")),
+
+
+            // ElevatedButton(onPressed: (){
+            //   Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
+            //     return const PolylineScreen();
+            //   }));
+            // }, child: const Text("Polyline between 2 points"))
           ],
         ),
       ),

@@ -12,6 +12,8 @@ import 'game_snake.dart';
 import 'lottery.dart';
 import 'news_foreign.dart';
 import 'calendar.dart';
+import 'music.dart';
+
 
 class Home_Widget extends StatefulWidget {
   const Home_Widget({super.key});
@@ -26,6 +28,7 @@ class _Home_WidgetState extends State<Home_Widget> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color.fromARGB(255, 200, 220, 239),
@@ -110,6 +113,8 @@ class MyGrid extends StatelessWidget {
     CellData('images/calendar.jpg', 'Lịch'),
     CellData('images/chatgpt.jpg', 'ChatGPT'),
     CellData('images/google.png', 'Google'),
+    CellData('images/music.png', 'Nghe Nhạc'),
+
     // Add other image paths and names
   ];
 
@@ -229,6 +234,15 @@ class GridCell extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => const ChatGptScreen(),
+              ),
+            );
+            break;
+
+          case 'Nghe Nhạc':
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Music(),
               ),
             );
             break;

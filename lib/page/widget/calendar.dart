@@ -32,7 +32,7 @@ class _CalendarState extends State<Calendar> {
       padding: const EdgeInsets.all(20.0),
       child: Column(
         children: [
-          Text("Selected Day = "+today.toString().split(" ")[0]),
+          Text("Ngày đã chọn = "+today.toString().split(" ")[0]),
           Container(
             child: TableCalendar(
                 locale: "en_US",
