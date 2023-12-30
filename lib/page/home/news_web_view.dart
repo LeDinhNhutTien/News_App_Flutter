@@ -17,7 +17,8 @@ class _NewsWebViewState extends State<NewsWebView> {
     // if (!kIsWeb && (defaultTargetPlatform != TargetPlatform.windows)) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text("WebView Screen"),
+
+
         ),
         body: WebView(
           initialUrl: widget.url,
@@ -25,17 +26,6 @@ class _NewsWebViewState extends State<NewsWebView> {
         ),
       );
     }
-    // else {
-    //   // Provide an alternative UI for the Windows platform
-    //   return Scaffold(
-    //     appBar: AppBar(
-    //       title: Text("WebView Screen (Not Supported on Windows)"),
-    //     ),
-    //     body: Center(
-    //       child: Text("WebView is not supported on Windows."),
-    //     ),
-    //   );
-    // }
-  // }
+
 }
 

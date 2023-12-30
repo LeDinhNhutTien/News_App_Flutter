@@ -1,12 +1,24 @@
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:email_auth/email_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_news_app/page/home/news_page.dart';
+import 'package:flutter_news_app/page/user/EmailTOtp.dart';
 import 'package:flutter_news_app/page/user/Input.dart';
-import 'package:flutter_news_app/page/user/mybutton.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_news_app/page/user/userauth.dart';
+import 'package:flutter_news_app/page/user/profile.dart';
+import 'package:flutter_news_app/page/user/profile.dart';
 import 'package:flutter_news_app/page/user/register.dart';
 import 'package:flutter_news_app/page/user/square.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_news_app/page/widget/home_widget.dart';
 import 'package:flutter_news_app/page/widget/lottery.dart';
 
+import 'package:http/http.dart' as http;
 
 // Make sure this class is a StatefulWidget if you want to update the current index
 class Login extends StatefulWidget {
@@ -14,127 +26,162 @@ class Login extends StatefulWidget {
 
   @override
   _LoginState createState() => _LoginState();
+
 }
+
 
 class _LoginState extends State<Login> {
   int _currentIndex = 0; // Initial index for the bottom navigation
-  final username = TextEditingController();
+  final email = TextEditingController();
   final password = TextEditingController();
+  String emailError = '';
+  String passwordError = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
+        automaticallyImplyLeading: false,
         centerTitle: true,
       ),
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Center(
-          child: Column(
-            children: [
-              Icon(Icons.lock, size: 100),
-              const SizedBox(height: 30),
-              Text(
-                'Welcome to app',
-                style: TextStyle(
-                  color: Colors.grey[700],
-                  fontSize: 16.0,
+        child: SingleChildScrollView( // Wrap the content with SingleChildScrollView
+          child: Center(
+            child: Column(
+              children: [
+                Icon(Icons.lock, size: 100),
+                const SizedBox(height: 30),
+                Text(
+                  'Welcome to app',
+                  style: TextStyle(
+                    color: Colors.grey[700],
+                    fontSize: 16.0,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              Input(
-                controller: username,
-                hintText: 'username',
-                obscureText: false,
-              ),
-              const SizedBox(height: 40),
-              Input(
-                controller: password,
-                hintText: 'password',
-                obscureText: true,
-              ),
-              const SizedBox(height: 10), // Khoảng cách chiều cao
-
-// forgot password?
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end, // Căn chỉnh text về phía cuối của hàng (bên phải)
-                  children: [
-                    Text(
-                      'Forgot Password?',
-                      style: TextStyle(color: Colors.blueAccent), // Màu xám đậm cho chữ
-                    ),
-                  ],
-                ),
-              ),
-              //button đăng nhập
-              const SizedBox(height: 25),
-              MyButton(onTap: Sign),
-              const SizedBox(height: 15),
-
-// or continue with
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Divider(
-                        thickness: 0.5,
-                        color: Colors.grey[400],
-                      ),
-                    ), // Expanded
-                    Text('Or continue with'),
-                    Expanded(
-                      child: Divider(
-                        thickness: 0.5,
-                        color: Colors.grey[400],
-                      ),
-                    ), // Expanded
-                  ],
-                ), // Row
-              ), // Padding
-              const SizedBox(height: 10),
-
-// google + apple sign in buttons
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  // google button
-                  SquareTile(imagePath: 'images/search.png'),
-
-                  SizedBox(width: 25),
-
-                  // apple button
-                  SquareTile(imagePath: 'images/github.png'),
-                ],
-              ), // Row
-              const SizedBox(height: 15),
-
-// not a member? register now
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Not a member? '),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Register()),
-                      );
-                    },
-                    child: Text(
-                      'Register now.',
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold,
+                const SizedBox(height: 20),
+                // Email error message
+                if (emailError.isNotEmpty)
+                  Padding(
+                    padding: EdgeInsets.only(left: 25.0),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        emailError,
+                        style: TextStyle(color: Colors.red, fontSize: 14),
                       ),
                     ),
                   ),
-                ],
-              ),
-            ],
+                Input(
+                  controller: email,
+                  hintText: 'email',
+                  obscureText: false,
+                ),
+                const SizedBox(height: 40),
+                // Password error message
+                if (passwordError.isNotEmpty)
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        passwordError,
+                        style: TextStyle(color: Colors.red, fontSize: 14),
+                      ),
+                    ),
+                  ),
+                Input(
+                  controller: password,
+                  hintText: 'password',
+                  obscureText: false,
+                ),
+                const SizedBox(height: 10),
+                // Forgot password
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          sendOTP();
+                        },
+                        child: Text(
+                          'Forgot Password?',
+                          style: TextStyle(color: Colors.blueAccent),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                // Login button
+                ElevatedButton(
+                  onPressed: () {
+                    login();
+                  },
+                  child: Text('Đăng nhập'),
+                ),
+                const SizedBox(height: 15),
+                // Divider with text
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Divider(
+                          thickness: 0.5,
+                          color: Colors.grey[400],
+                        ),
+                      ),
+                      Text('Or continue with'),
+                      Expanded(
+                        child: Divider(
+                          thickness: 0.5,
+                          color: Colors.grey[400],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
+                // Social media sign-in buttons
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+
+                      child: SquareTile(imagePath: 'images/search.png'),
+                    ),
+                    const SizedBox(width: 25), // Make sure to keep constants for fixed widgets
+                    SquareTile(imagePath: 'images/github.png'), // Assuming this is another tappable widget
+                  ],
+                ),
+                const SizedBox(height: 15),
+                // Register link
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Not a member? '),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Register()),
+                        );
+                      },
+                      child: Text(
+                        'Register now.',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -184,18 +231,85 @@ class _LoginState extends State<Login> {
               );
               break;
             case 3:
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Login()),
-              );
+
+              final userAuth = Provider.of<UserAuth>(context, listen: false);
+              if (userAuth.isLoggedIn) {
+
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => Profile(userData: userAuth.userData)),
+                );
+              } else {
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Login()),
+                );
+              }
               break;
           }
         },
       ),
     );
   }
-void Sign(){
+  /**
+   *  mail
+   */
+  void sendOTP() async {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => EmailOtp()),
+    );
+  }
+  void login() async {
+    setState(() {
+      // Clear error messages on new login attempt
+      emailError = '';
+      passwordError = '';
+    });
 
-}
+    var url = "http://172.21.128.1/account/demo.php";
+    var response = await http.post(
+      Uri.parse(url),
+      body: {
+        'email': email.text,
+        'password': password.text,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      if (data["result"] == "success") {
+        /**
+         * lấy user
+         */
+        var userData = data['user'];
+        print('User Data: $userData');
+        setState(() {
+          Provider.of<UserAuth>(context, listen: false).setLoggedIn(true, userData: userData);
+        });
+
+        // Navigate to the profile page or home page
+      } else {
+        // If login fails, set the appropriate error message
+        setState(() {
+          if (data["message"].contains("User not found")) {
+            emailError = 'Mail không tồn tại.';
+          } else if (data["message"].contains("Invalid password")) {
+            passwordError = 'password not found';
+          } else {
+            emailError = 'Login failed. Please try again.';
+            passwordError = 'Login failed. Please try again.';
+          }
+        });
+      }
+    } else {
+      // Handle non-200 responses
+      setState(() {
+        emailError = 'Error occurred while communicating with the server.';
+        passwordError = 'Error occurred while communicating with the server.';
+      });
+    }
+  }
 
 }

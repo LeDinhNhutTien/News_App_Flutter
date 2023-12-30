@@ -4,10 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_news_app/page/home/news_web_view.dart';
 import 'package:flutter_news_app/page/user/login.dart';
 import 'package:flutter_news_app/page/user/profile.dart';
-
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_news_app/page/user/AuthWrapper.dart';
+import 'package:flutter_news_app/page/user/userauth.dart';
 import 'package:xml2json/xml2json.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:html/parser.dart' as htmlParser;
+import 'package:html/dom.dart' as htmlDom;
 import '../widget/home_widget.dart';
 import '../widget/lottery.dart';
 
@@ -62,7 +66,7 @@ class _NewsPageState extends State<NewsPage> {
         var JSONata = await xml2json.toGData();
         var data = json.decode(JSONata);
         topStories = data['rss']['channel']['item'];
-        // print(topStories);
+
       } catch (e) {
         // print('Error parsing XML: $e');
       }
@@ -75,7 +79,9 @@ class _NewsPageState extends State<NewsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       appBar: isSearching ? searchAppBar() : appBar(),
+
       body: SafeArea(
           child: Column(
         children: [
@@ -149,13 +155,23 @@ class _NewsPageState extends State<NewsPage> {
                 );
                 break;
               case 3:
-              // Navigate to the Personal page
-              // Replace 'YourPersonalPage()' with the widget representing your personal page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) =>const  Profile()),
-                );
+
+                final userAuth = Provider.of<UserAuth>(context, listen: false);
+                if (userAuth.isLoggedIn) {
+
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => Profile(userData: userAuth.userData)),
+                  );
+                } else {
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Login()),
+                  );
+                }
                 break;
+
             }
             setState(() {
               _currentIndex = index;
@@ -251,11 +267,18 @@ class _NewsPageState extends State<NewsPage> {
                 ]),
             child: ListTile(
               onTap: (){
+          String title =topStories[index]['title']['\$t'];
                 Navigator.push(context,
                     MaterialPageRoute(builder:
                         (BuildContext context) => NewsWebView(url: topStories[index]['link']['\$t']
                     )));
+
+                if (imagePath != null && description != null) {
+
+                  insertHistory(imagePath,title);
+                }
               },
+
                 horizontalTitleGap: 10,
                 minVerticalPadding: 10,
                 contentPadding: const EdgeInsets.symmetric(
@@ -347,5 +370,22 @@ class _NewsPageState extends State<NewsPage> {
     );
   }
 }
+Future<void> insertHistory(String imageUrl, String title) async {
+  final uri = Uri.parse('http://172.21.128.1/account/history.php'); // URL to your PHP script
+  final response = await http.post(uri, body: {
+    'image': imageUrl,
+    'title': title,
+    'create_at': DateTime.now().toIso8601String(), // Sends the current date and time
+  });
 
+}
+String getTitleFromHTML(String htmlString) {
+  final document = htmlParser.parse(htmlString);
+  final anchorElement = document.querySelector('a');
+  if (anchorElement != null) {
+    final title = anchorElement.attributes['title'];
+    return title ?? 'Không có tiêu đề';
+  }
+  return 'Không có tiêu đề';
+}
 

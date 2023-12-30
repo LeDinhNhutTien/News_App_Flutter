@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_news_app/page/user/login.dart';
 import 'package:flutter_news_app/page/user/profile.dart';
+import 'package:flutter_news_app/page/user/userauth.dart';
 import 'package:flutter_news_app/page/widget/translate.dart';
 
+import 'package:provider/provider.dart';
 import '../home/news_page.dart';
 import 'lottery.dart';
 
@@ -16,11 +18,13 @@ class Home_Widget extends StatefulWidget {
 class _Home_WidgetState extends State<Home_Widget> {
   int _currentIndex = 1;
 
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: const Color.fromARGB(255, 200, 220, 239),
           title: const Text("Tiện ích"),
           centerTitle: true,
@@ -72,12 +76,23 @@ class _Home_WidgetState extends State<Home_Widget> {
                   MaterialPageRoute(builder: (context) => const Lottery()),
                 );
                 break;
-              case 3:
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Profile()),
-                );
-                break;
+    case 3:
+
+    final userAuth = Provider.of<UserAuth>(context, listen: false);
+    if (userAuth.isLoggedIn) {
+
+    Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(builder: (context) => Profile(userData: userAuth.userData)),
+    );
+    } else {
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Login()),
+      );
+    }
+    break;
             }
             setState(() {
               _currentIndex = index;

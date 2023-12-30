@@ -77,6 +77,7 @@ class _TranslatorAppState extends State<Translator> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         centerTitle: true,
         flexibleSpace: Container(
             decoration: const BoxDecoration(

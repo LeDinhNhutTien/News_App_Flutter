@@ -15,6 +15,7 @@ class _LotteryState extends State<Lottery> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
             backgroundColor: const Color.fromARGB(255, 200, 220, 239),
             title: const Text("NEWS APP"),
             actions: [
