@@ -5,10 +5,12 @@ import 'package:email_auth/email_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_news_app/page/admin/HomeAdmin.dart';
+import 'package:flutter_news_app/page/history/histories.dart';
 import 'package:flutter_news_app/page/home/news_page.dart';
 import 'package:flutter_news_app/page/user/EmailTOtp.dart';
 import 'package:flutter_news_app/page/user/Input.dart';
-import 'package:flutter/material.dart';
+
+import 'package:flutter_news_app/page/user/google.dart';
 
 import 'package:provider/provider.dart';
 import 'package:flutter_news_app/page/user/userauth.dart';
@@ -21,83 +23,7 @@ import 'package:flutter_news_app/page/widget/home_widget.dart';
 import 'package:flutter_news_app/page/widget/lottery.dart';
 
 import 'package:http/http.dart' as http;
-const List<String> scopes = <String>[
-  'email',
-];
 
-GoogleSignIn _googleSignIn = GoogleSignIn(
-  scopes: scopes,
-);
-class SignInDemo extends StatefulWidget {
-  const SignInDemo({Key? key}) : super(key: key);
-
-  @override
-  State createState() => _SignInDemoState();
-}
-
-class _SignInDemoState extends State<SignInDemo> {
-  GoogleSignInAccount? _currentUser;
-
-  @override
-  void initState() {
-    super.initState();
-    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
-      setState(() {
-        _currentUser = account;
-      });
-    });
-    _googleSignIn.signInSilently();
-  }
-
-  Future<void> _handleSignIn() async {
-    try {
-      await _googleSignIn.signIn();
-    } catch (error) {
-      print(error);
-    }
-  }
-
-  Future<void> _handleSignOut() => _googleSignIn.disconnect();
-
-  Widget _buildBody() {
-    final GoogleSignInAccount? user = _currentUser;
-    if (user != null) {
-      // The user is Authenticated
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          ListTile(
-            leading: GoogleUserCircleAvatar(identity: user),
-            title: Text(user.displayName ?? ''),
-            subtitle: Text(user.email),
-          ),
-          ElevatedButton(
-            onPressed: _handleSignOut,
-            child: const Text('SIGN OUT'),
-          ),
-        ],
-      );
-    } else {
-      // The user is NOT Authenticated
-      return Login();
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Google Sign In'),
-        centerTitle: true, // This will center the AppBar title
-      ),
-      body: ConstrainedBox(
-        constraints: const BoxConstraints.expand(),
-        child: _buildBody(),
-      ),
-    );
-  }
-}
-// Make sure this class is a StatefulWidget if you want to update the current index
 class Login extends StatefulWidget {
   Login({super.key});
 
@@ -113,7 +39,7 @@ class _LoginState extends State<Login> {
   final password = TextEditingController();
   String emailError = '';
   String passwordError = '';
-  GlobalKey<_SignInDemoState> signInDemoKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -227,10 +153,17 @@ class _LoginState extends State<Login> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-
                     InkWell(
-                      onTap: () async {
-                        await signInDemoKey.currentState?._handleSignIn();
+                      onTap: ()  {
+                        // This context now has the Provider above it
+
+                        setState(() {
+                          Provider.of<UserAuth>(context, listen: false).setLoggedIn(true, userData: null);
+                        });
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => SignInDemo()),
+                        );
                       },
                       child: SquareTile(imagePath: 'images/search.png'),
                     ),
@@ -310,14 +243,14 @@ class _LoginState extends State<Login> {
             case 2:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const Lottery()),
+                MaterialPageRoute(builder: (context) => Histories()),
               );
               break;
             case 3:
 
               final userAuth = Provider.of<UserAuth>(context, listen: false);
               if (userAuth.isLoggedIn) {
-                final isAdmin = userAuth.userData['isAdmin'] ?? 0;
+                final isAdmin = userAuth.userData['isAdmin'] ?? 2;
                 if(isAdmin == 1){
                   Navigator.pushReplacement(
                     context,
@@ -335,12 +268,22 @@ class _LoginState extends State<Login> {
                       ),
                     );
                   }
+                  else{
+                    if(isAdmin== 2){
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SignInDemo(), // Pass the userData here
+                        ),
+                      );
+                    }
+                  }
                 }
 
               } else {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Login()),
+                  MaterialPageRoute(builder: (context) =>Login()),
                 );
               }
               break;

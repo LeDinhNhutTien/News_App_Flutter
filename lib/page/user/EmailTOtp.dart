@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:email_auth/email_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_news_app/page/history/histories.dart';
 import 'package:flutter_news_app/page/home/news_page.dart';
 import 'package:flutter_news_app/page/user/Input.dart';
 import 'package:flutter_news_app/page/widget/home_widget.dart';
@@ -180,7 +181,7 @@ class _EmailOtpState extends State<EmailOtp> {
             case 2:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const Lottery()),
+                MaterialPageRoute(builder: (context) => Histories()),
               );
               break;
             case 3:

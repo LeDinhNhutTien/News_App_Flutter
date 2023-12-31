@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_news_app/page/admin/HomeAdmin.dart';
+import 'package:flutter_news_app/page/history/histories.dart';
 import 'package:flutter_news_app/page/home/news_page.dart';
 import 'package:flutter_news_app/page/user/Input.dart';
 import 'package:flutter_news_app/page/user/buttonedit.dart';
+import 'package:flutter_news_app/page/user/google.dart';
 import 'package:flutter_news_app/page/user/login.dart';
 import 'package:flutter_news_app/page/user/profile.dart';
 import 'package:flutter_news_app/page/user/userauth.dart';
@@ -45,7 +47,6 @@ class _RegsterState extends State<Edit> {
     print(id);
     return Scaffold(
       appBar: AppBar(
-
         centerTitle: true,
       ),
       backgroundColor: Colors.white,
@@ -161,13 +162,13 @@ class _RegsterState extends State<Edit> {
             case 2:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const Lottery()),
+                MaterialPageRoute(builder: (context) => Histories()),
               );
               break;
             case 3:
               final userAuth = Provider.of<UserAuth>(context, listen: false);
               if (userAuth.isLoggedIn) {
-                final isAdmin = userAuth.userData['isAdmin'] ?? 0;
+                final isAdmin = userAuth.userData['isAdmin'] ?? 2;
                 if(isAdmin == 1){
                   Navigator.pushReplacement(
                     context,
@@ -184,6 +185,16 @@ class _RegsterState extends State<Edit> {
                         builder: (context) => AdminApp(), // Pass the userData here
                       ),
                     );
+                  }
+                  else{
+                    if(isAdmin== 2){
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SignInDemo(), // Pass the userData here
+                        ),
+                      );
+                    }
                   }
                 }
 

@@ -1,10 +1,14 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 
 class UserAuth extends ChangeNotifier {
   bool _isLoggedIn = false;
+  GoogleSignInAccount? _currentUser;
+
+  GoogleSignInAccount? get currentUser => _currentUser;
   Map<String, dynamic> _userData = {}; // Store user data in a map
 
   bool get isLoggedIn => _isLoggedIn;
@@ -12,6 +16,10 @@ class UserAuth extends ChangeNotifier {
   Map<String, dynamic> get userData => _userData; // Getter for user data
   void updateUserData(Map<String, dynamic> newUserData) {
     _userData = newUserData;
+    notifyListeners();
+  }
+  void updateUser(GoogleSignInAccount? account) {
+    _currentUser = account;
     notifyListeners();
   }
   void setLoggedIn(bool value, {Map<String, dynamic>? userData}) {

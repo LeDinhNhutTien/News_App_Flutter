@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_news_app/page/admin/HomeAdmin.dart';
+import 'package:flutter_news_app/page/history/histories.dart';
+import 'package:flutter_news_app/page/user/google.dart';
 import 'package:flutter_news_app/page/user/login.dart';
 import 'package:flutter_news_app/page/user/profile.dart';
 import 'package:flutter_news_app/page/user/userauth.dart';
@@ -35,6 +37,7 @@ class _Home_WidgetState extends State<Home_Widget> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: const Color.fromARGB(255, 200, 220, 239),
           title: const Text("Tiện ích"),
           centerTitle: true,
@@ -83,13 +86,14 @@ class _Home_WidgetState extends State<Home_Widget> {
               case 2:
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const Lottery()),
+                  MaterialPageRoute(builder: (context) =>  Histories()),
                 );
                 break;
               case 3:
+
                 final userAuth = Provider.of<UserAuth>(context, listen: false);
                 if (userAuth.isLoggedIn) {
-                  final isAdmin = userAuth.userData['isAdmin'] ?? 0;
+                  final isAdmin = userAuth.userData['isAdmin'] ?? 2;
                   if(isAdmin == 1){
                     Navigator.pushReplacement(
                       context,
@@ -107,12 +111,22 @@ class _Home_WidgetState extends State<Home_Widget> {
                         ),
                       );
                     }
+                    else{
+                      if(isAdmin == 2){
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SignInDemo(), // Pass the userData here
+                          ),
+                        );
+                      }
+                    }
                   }
 
                 } else {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Login()),
+                    MaterialPageRoute(builder: (context) =>Login()),
                   );
                 }
                 break;
