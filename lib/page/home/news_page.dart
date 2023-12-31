@@ -2,7 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_news_app/page/admin/HomeAdmin.dart';
+import 'package:flutter_news_app/page/history/histories.dart';
 import 'package:flutter_news_app/page/home/news_web_view.dart';
+
+import 'package:flutter_news_app/page/user/google.dart';
 import 'package:flutter_news_app/page/user/login.dart';
 import 'package:flutter_news_app/page/user/profile.dart';
 import 'package:flutter_news_app/page/user/userauth.dart';
@@ -148,13 +151,16 @@ class _NewsPageState extends State<NewsPage> {
             // Replace 'YourPersonalPage()' with the widget representing your personal page
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const Lottery()),
+                MaterialPageRoute(builder: (context) => Histories()),
               );
               break;
             case 3:
+
               final userAuth = Provider.of<UserAuth>(context, listen: false);
+
               if (userAuth.isLoggedIn) {
-                final isAdmin = userAuth.userData['isAdmin'] ?? 0;
+                final isAdmin = userAuth.userData['isAdmin'] ?? 2;
+                print('is' + isAdmin.toString());
                 if(isAdmin == 1){
                   Navigator.pushReplacement(
                     context,
@@ -172,6 +178,16 @@ class _NewsPageState extends State<NewsPage> {
                       ),
                     );
                   }
+
+                }
+
+                if(isAdmin== 2){
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SignInDemo(), // Pass the userData here
+                    ),
+                  );
                 }
 
               } else {
@@ -251,6 +267,8 @@ class _NewsPageState extends State<NewsPage> {
   }
 
   Widget _buildNewsListView() {
+    final userAuth = Provider.of<UserAuth>(context, listen: false);
+    final id = userAuth.userData['id'].toString() ;
     return ListView.builder(
         shrinkWrap: true,
         controller: ScrollController(),
@@ -262,7 +280,7 @@ class _NewsPageState extends State<NewsPage> {
           // Parse the HTML content to extract the image path
           RegExp regex = RegExp(r'<img alt="[^"]+" src="([^"]+)"');
           Match? match = regex.firstMatch(description);
-
+          String title =topStories[index]['title']['\$t'];
           // Check if a match is found
           String? imagePath = match?.group(1);
           return Container(
@@ -280,6 +298,12 @@ class _NewsPageState extends State<NewsPage> {
                     MaterialPageRoute(builder:
                         (BuildContext context) => NewsWebView(url: topStories[index]['link']['\$t']
                     )));
+
+                if (imagePath != null && description != null) {
+
+                  insertHistory(id, imagePath, title);
+                }
+
               },
               horizontalTitleGap: 10,
               minVerticalPadding: 10,
@@ -370,6 +394,28 @@ class _NewsPageState extends State<NewsPage> {
         scrollDirection: Axis.horizontal,
       ),
     );
+  }
+  Future<void> insertHistory(String id ,String imageUrl, String title) async {
+    final uri = Uri.parse('http://172.27.240.1/server/history.php'); // URL to your PHP script
+    try {
+      final response = await http.post(uri, body: {
+        'user_id': id, // Make sure this matches the expected key in your PHP
+        'image': imageUrl,
+        'title': title,
+        'create_at': DateTime.now().toIso8601String(), // Sends the current date and time
+      });
+
+      if (response.statusCode == 200) {
+        // If server returns an OK response, print the body
+        print('Response data: ${response.body}');
+      } else {
+        // If the server did not return a 200 OK response,
+        // then throw an exception.
+        print('Failed to load data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error sending data: $e');
+    }
   }
 }
 

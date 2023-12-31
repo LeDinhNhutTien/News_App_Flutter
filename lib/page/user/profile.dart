@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_news_app/page/admin/HomeAdmin.dart';
+import 'package:flutter_news_app/page/history/histories.dart';
 import 'package:flutter_news_app/page/home/news_page.dart';
 import 'package:flutter_news_app/page/user/edit.dart';
 import 'package:flutter_news_app/page/user/login.dart';
@@ -218,7 +219,7 @@ class Profile extends StatefulWidget {
             case 2:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const Lottery()),
+                MaterialPageRoute(builder: (context) =>  Histories()),
               );
               break;
 

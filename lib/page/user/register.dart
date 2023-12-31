@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_news_app/page/history/histories.dart';
 import 'package:flutter_news_app/page/home/news_page.dart';
 import 'package:flutter_news_app/page/user/Input.dart';
 import 'package:flutter_news_app/page/user/login.dart';
@@ -194,7 +195,7 @@ class _RegsterState extends State<Register> {
             case 2:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const Lottery()),
+                MaterialPageRoute(builder: (context) => Histories()),
               );
               break;
             case 3:
