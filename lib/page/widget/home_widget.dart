@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_news_app/page/admin/HomeAdmin.dart';
+import 'package:flutter_news_app/page/user/login.dart';
 import 'package:flutter_news_app/page/user/profile.dart';
+import 'package:flutter_news_app/page/user/userauth.dart';
 import 'package:flutter_news_app/page/widget/QRCode/QRScannerPage.dart';
 import 'package:flutter_news_app/page/widget/google_map.dart';
 import 'package:flutter_news_app/page/widget/translate.dart';
 import 'package:flutter_news_app/page/widget/weather_app.dart';
+import 'package:provider/provider.dart';
 
 import '../home/news_page.dart';
 import 'QRCode/Youtobe.dart';
@@ -83,10 +87,34 @@ class _Home_WidgetState extends State<Home_Widget> {
                 );
                 break;
               case 3:
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Profile()),
-                );
+                final userAuth = Provider.of<UserAuth>(context, listen: false);
+                if (userAuth.isLoggedIn) {
+                  final isAdmin = userAuth.userData['isAdmin'] ?? 0;
+                  if(isAdmin == 1){
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Profile(userData: userAuth.userData), // Pass the userData here
+                      ),
+                    );
+                  }
+                  else{
+                    if(isAdmin== 0){
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AdminApp(), // Pass the userData here
+                        ),
+                      );
+                    }
+                  }
+
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Login()),
+                  );
+                }
                 break;
             }
             setState(() {

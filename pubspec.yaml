@@ -66,11 +66,18 @@ dependencies:
 
 #  phiên bản thư viện weather
   weather: ^3.0.0
+  flutter_webview_plugin: ^0.4.0
+  email_auth: ^0.0.1
+  password_strength_checker: ^1.2.2
+  google_sign_in: ^6.2.1
+  mailer: ^6.0.1
+  email_validator: ^2.1.17
+  intl_phone_field_with_validator: ^0.2.0
 #xử lý quốc tế hóa, bao gồm định dạng số, ngày tháng, và ngôn ngữ
 intl: ^0.19.0
 
 dev_dependencies:
-  flutter_webview_plugin: ^0.4.0
+
   flutter_test:
     sdk: flutter
 
