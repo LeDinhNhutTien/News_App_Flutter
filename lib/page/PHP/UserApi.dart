@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
 Future<List<User>> fetchDataDBUser() async {
   try {
-    final url = Uri.parse('http://192.168.2.15/server/getAllUser.php');
+    final url = Uri.parse('http://172.27.240.1/server/getAllUser.php');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -24,7 +24,7 @@ Future<List<User>> fetchDataDBUser() async {
 
 }
 Future<void> saveUser(User user) async {
-  var url = Uri.parse('http://192.168.2.15/server/saveUser.php');
+  var url = Uri.parse('http://172.27.240.1/server/saveUser.php');
 
   var response = await http.post(url, body: user.toJson());
 
@@ -35,7 +35,7 @@ Future<void> saveUser(User user) async {
   }
 }
 Future<void> deleteUser(User user) async {
-  var url = Uri.parse('http://192.168.2.15/server/deleteUser.php');
+  var url = Uri.parse('http://172.27.240.1/server/deleteUser.php');
 
   var response = await http.post(url, body: user.toJsonForDelete());
 
@@ -46,7 +46,7 @@ Future<void> deleteUser(User user) async {
   }
 }
 Future<void> updateUser(User user, String oldEmail) async {
-  var url = Uri.parse('http://192.168.2.15/server/updateUser.php');
+  var url = Uri.parse('http://172.27.240.1/server/updateUser.php');
 
   var response = await http.post(url, body: user.toJsonForUpdate(oldEmail));
 

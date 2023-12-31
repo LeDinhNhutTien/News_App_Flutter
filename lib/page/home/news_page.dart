@@ -1,9 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_news_app/page/admin/HomeAdmin.dart';
 import 'package:flutter_news_app/page/home/news_web_view.dart';
 import 'package:flutter_news_app/page/user/login.dart';
 import 'package:flutter_news_app/page/user/profile.dart';
+import 'package:flutter_news_app/page/user/userauth.dart';
+import 'package:provider/provider.dart';
 
 import 'package:xml2json/xml2json.dart';
 import 'package:http/http.dart' as http;
@@ -149,12 +152,34 @@ class _NewsPageState extends State<NewsPage> {
               );
               break;
             case 3:
-            // Navigate to the Personal page
-            // Replace 'YourPersonalPage()' with the widget representing your personal page
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) =>const  Profile()),
-              );
+              final userAuth = Provider.of<UserAuth>(context, listen: false);
+              if (userAuth.isLoggedIn) {
+                final isAdmin = userAuth.userData['isAdmin'] ?? 0;
+                if(isAdmin == 1){
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Profile(userData: userAuth.userData), // Pass the userData here
+                    ),
+                  );
+                }
+                else{
+                  if(isAdmin== 0){
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AdminApp(), // Pass the userData here
+                      ),
+                    );
+                  }
+                }
+
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Login()),
+                );
+              }
               break;
           }
           setState(() {

@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_news_app/page/admin/managmentNews/NewsManager.dart';
+import 'package:flutter_news_app/page/home/news_page.dart';
+import 'package:flutter_news_app/page/user/login.dart';
+import 'package:flutter_news_app/page/user/profile.dart';
+import 'package:flutter_news_app/page/user/userauth.dart';
+import 'package:flutter_news_app/page/widget/home_widget.dart';
+import 'package:flutter_news_app/page/widget/lottery.dart';
+import 'package:provider/provider.dart';
 
 import 'loadNews/TrongNuoc.dart';
 import 'managmentUser/UserAdmin.dart';
@@ -32,7 +39,7 @@ class AdminHomePage extends StatefulWidget {
 
 class _AdminHomePageState extends State<AdminHomePage> {
   bool isMenuOpen = false;
-
+  int _currentIndex = 0;
   void toggleMenu() {
     setState(() {
       isMenuOpen = !isMenuOpen;
@@ -79,6 +86,84 @@ class _AdminHomePageState extends State<AdminHomePage> {
           if (isMenuOpen)
             const NavigationDrawer(),
         ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        fixedColor: Colors.black,
+        type: BottomNavigationBarType.fixed,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.widgets),
+            label: 'Widget',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history),
+            label: 'History',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Personal',
+          ),
+        ],
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+          switch (index) {
+            case 0:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const NewsPage()),
+              );
+              break;
+            case 1:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Home_Widget()),
+              );
+              break;
+            case 2:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Lottery()),
+              );
+              break;
+            case 3:
+              final userAuth = Provider.of<UserAuth>(context, listen: false);
+              if (userAuth.isLoggedIn) {
+                final isAdmin = userAuth.userData['isAdmin'] ?? 0;
+                if(isAdmin == 1){
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Profile(userData: userAuth.userData), // Pass the userData here
+                    ),
+                  );
+                }
+                else{
+                  if(isAdmin== 0){
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AdminApp(), // Pass the userData here
+                      ),
+                    );
+                  }
+                }
+
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Login()),
+                );
+              }
+              break;
+          }
+        },
       ),
     );
   }
@@ -138,8 +223,21 @@ class NavigationDrawer extends StatelessWidget {
               );
             },
           ),
+          ListTile(
+            title: const Text('Đăng Xuất'),
+            onTap: () {
+              // Handle when the user taps on the Danh sách bài báo menu item
+              Provider.of<UserAuth>(context, listen: false).logout();
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Login()),
+              );
+            },
+          ),
         ],
       ),
+
     );
+
   }
 }
