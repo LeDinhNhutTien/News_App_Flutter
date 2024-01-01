@@ -30,14 +30,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-
-
-
-
   xml: ^6.5.0
+
+  qr_code_scanner: ^1.0.1
   fl_chart: ^0.65.0
+  qr_flutter:
+    git:
+      url: https://github.com/theyakka/qr.flutter.git
   url_launcher: ^6.2.2
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -46,12 +47,37 @@ dependencies:
   http: ^0.13.4
   html: ^0.15.4
   xml2json: ^6.2.1
-  webview_flutter: ^2.8.0
+  webview_flutter: ^2.0.13
   translator: ^0.1.7
   font_awesome_flutter: ^10.6.0
+  chat_gpt_sdk: ^2.0.0
+  dash_chat_2: ^0.0.18
+  google_maps_flutter: ^2.5.0
+  geolocator: ^10.1.0
+  flutter_google_places: ^0.3.0
+  awesome_snackbar_content: ^0.0.8
+  table_calendar: ^3.0.9
+  audioplayers: ^5.2.1
+  on_audio_query: ^2.9.0
+  permission_handler: ^11.1.0
+  just_audio: ^0.9.36
+  just_audio_background: ^0.0.1-beta.11
+  provider: ^6.1.1
 
+#  phiên bản thư viện weather
+  weather: ^3.0.0
+  flutter_webview_plugin: ^0.4.0
+  email_auth: ^0.0.1
+  password_strength_checker: ^1.2.2
+  google_sign_in: ^6.2.1
+  mailer: ^6.0.1
+  email_validator: ^2.1.17
+  intl_phone_field_with_validator: ^0.2.0
+#xử lý quốc tế hóa, bao gồm định dạng số, ngày tháng, và ngôn ngữ
+intl: ^0.19.0
 
 dev_dependencies:
+
   flutter_test:
     sdk: flutter
 
@@ -87,6 +113,11 @@ flutter:
     - images/github.png
     - images/search.png
     - images/Account-User-PNG.png
+    - images/chatgpt.jpg
+    - images/google.png
+    - images/music.png
+    - images/
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_news_app/page/PHP/NewsApi.dart';
+import '../../model/NewsArticle.dart';
 
-
-import '../model/NewsArticle.dart';
-import 'TheGioi.dart';
-
-class EditNewsPage extends StatefulWidget {
+class UpdateNewsDB extends StatefulWidget {
   final NewsArticle newsArticle;
 
-  const EditNewsPage({
+  const UpdateNewsDB({
     Key? key,
     required this.newsArticle,
   }) : super(key: key);
 
   @override
-  _EditNewsPageState createState() => _EditNewsPageState();
+  _UpdateNewsDBState createState() => _UpdateNewsDBState();
 }
 
-class _EditNewsPageState extends State<EditNewsPage> {
+class _UpdateNewsDBState extends State<UpdateNewsDB> {
   late TextEditingController _titleController;
   late TextEditingController _authorController;
   late TextEditingController _descriptionController;
   late TextEditingController _urlController;
+  late TextEditingController _typeController;
+  late TextEditingController _dateController;
 
   @override
   void initState() {
@@ -30,6 +30,8 @@ class _EditNewsPageState extends State<EditNewsPage> {
     _descriptionController =
         TextEditingController(text: widget.newsArticle.description);
     _urlController = TextEditingController(text: widget.newsArticle.url);
+    _typeController = TextEditingController(text: widget.newsArticle.type);
+    _dateController = TextEditingController(text: widget.newsArticle.date);
   }
 
   @override
@@ -38,6 +40,8 @@ class _EditNewsPageState extends State<EditNewsPage> {
     _authorController.dispose();
     _descriptionController.dispose();
     _urlController.dispose();
+    _typeController.dispose();
+    _dateController.dispose();
     super.dispose();
   }
 
@@ -77,6 +81,20 @@ class _EditNewsPageState extends State<EditNewsPage> {
               controller: _urlController,
               decoration: const InputDecoration(
                 labelText: 'URL',
+              ),
+            ),
+            const SizedBox(height: 16.0),
+            TextField(
+              controller: _typeController,
+              decoration: const InputDecoration(
+                labelText: 'Type',
+              ),
+            ),
+            const SizedBox(height: 16.0),
+            TextField(
+              controller: _dateController,
+              decoration: const InputDecoration(
+                labelText: 'Date',
               ),
             ),
             const SizedBox(height: 16.0),
@@ -126,12 +144,12 @@ class _EditNewsPageState extends State<EditNewsPage> {
       author: _authorController.text,
       description: _descriptionController.text,
       url: _urlController.text,
-      type: '',
-      date: '',
+      type: _typeController.text,
+      date: _dateController.text,
     );
 
     // TODO: Save the updated news article to the database or update the existing one
-
+    NewsApi.updateNewsArticle(updatedNewsArticle, widget.newsArticle.title);
     Navigator.pop(context, updatedNewsArticle);
   }
 }

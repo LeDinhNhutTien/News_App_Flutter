@@ -1,4 +1,5 @@
 class NewsArticle {
+
   final String image;
   final String title;
   final String author;
@@ -39,13 +40,42 @@ class NewsArticle {
 
   factory NewsArticle.fromJsonDB(Map<String, dynamic> json) {
     return NewsArticle(
-      image: json['image'] as String,
-      title: json['title'] as String,
-      author: json['author'] as String,
-      description: json['description'] as String,
-      url: json['url'] as String,
-      type: json['type'] as String,
-      date: json['create_at'] as String,
+      image: json['image'] as String? ?? '', // Provide a default value if necessary
+      title: json['title'] as String? ?? '',
+      author: json['author'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      url: json['url'] as String? ?? '',
+      type: json['type'] as String? ?? '',
+      date: json['create_at'] as String? ?? '',
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'image': image,
+      'title': title,
+      'author': author,
+      'description': description,
+      'url': url,
+      'type': type,
+      'create_at':date,
+    };
+  }
+  Map<String, dynamic> toJsonForUpdate(String oldTitle) {
+    return {
+      'image': image,
+      'title': oldTitle,
+      'new_title': title,
+      'author': author,
+      'description': description,
+      'url': url,
+      'type': type,
+      'create_at': date,
+    };
+  }
+  Map<String, dynamic> toJsonForDelete() {
+    return {
+      'title': title,
+    };
   }
 }
