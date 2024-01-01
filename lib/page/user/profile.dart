@@ -172,7 +172,7 @@ class Profile extends StatefulWidget {
                 ),
               ),
               const SizedBox(height: 50),
-             LogOut(onTap: Logout ),
+             LogOut(onTap: logout ),
             ],
           ),
         ),
@@ -227,6 +227,7 @@ class Profile extends StatefulWidget {
               final userAuth = Provider.of<UserAuth>(context, listen: false);
               if (userAuth.isLoggedIn) {
                 final isAdmin = userAuth.userData['isAdmin'] ?? 0;
+                print(isAdmin);
 if(isAdmin == 1){
   Navigator.pushReplacement(
     context,
@@ -258,11 +259,15 @@ else{
       ),
     );
   }
-   void Logout(){
-     Provider.of<UserAuth>(context, listen: false).logout();
-     Navigator.push(
-       context,
-       MaterialPageRoute(builder: (context) => Login()),
-     );
-   }
-}
+
+
+      void logout() {
+        Provider.of<UserAuth>(context, listen: false).logout();
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => Login()),
+              (Route<dynamic> route) => false,
+        );
+      }
+
+    }
