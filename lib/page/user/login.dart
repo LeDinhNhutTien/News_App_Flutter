@@ -97,7 +97,7 @@ class _LoginState extends State<Login> {
                 Input(
                   controller: password,
                   hintText: 'password',
-                  obscureText: false,
+                  obscureText: true,
                 ),
                 const SizedBox(height: 10),
                 // Forgot password
@@ -308,7 +308,7 @@ class _LoginState extends State<Login> {
       passwordError = '';
     });
 
-    var url = "http://172.27.240.1/server/login.php";
+    var url = "http://172.26.208.1/server/login.php";
     var response = await http.post(
       Uri.parse(url),
       body: {
@@ -325,11 +325,29 @@ class _LoginState extends State<Login> {
          */
         var userData = data['user'];
         print('User Data: $userData');
+        int isAdmin = userData['isAdmin'] ?? 0;
+        print(isAdmin);
         setState(() {
           Provider.of<UserAuth>(context, listen: false).setLoggedIn(true, userData: userData);
 
 
         });
+        if(isAdmin ==0){
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AdminApp(), // Pass the userData here
+            ),
+          );
+        }else{
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>Profile(userData: userData), // Pass the userData here
+            ),
+          );
+        }
+
 
         // Navigate to the profile page or home page
       } else {
