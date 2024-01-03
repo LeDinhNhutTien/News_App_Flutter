@@ -4,11 +4,12 @@ import '../model/NewsArticle.dart';
 import 'package:xml/xml.dart' as xml;
 
 class NewsApi {
-  static String urlGetAll ="http://172.27.240.1/server/getAllNews.php";
-  static String urlArticleExistsInDatabase ="http://172.27.240.1/server/checkTitleAndCreate.php";
-  static String urlSaveNewsArticle ="http://172.27.240.1/server/saveNews.php";
-  static String urlDeleteNewsArticle ="'http://172.27.240.1/server/deleteNews.php'";
-  static String urlUpdateNewsArticle ="''http://172.27.240.1/server/updateNews.php''";
+  static String urlGetAll ="http://192.168.2.15/server/getAllNews.php";
+  static String urlArticleExistsInDatabase ="http://192.168.2.15/server/checkTitleAndCreate.php";
+  static String urlSaveNewsArticle ="http://192.168.2.15/server/saveNews.php";
+  static String urlDeleteNewsArticle ="'http://192.168.2.15/server/deleteNews.php'";
+  static String urlUpdateNewsArticle ="''http://192.168.2.15/server/updateNews.php''";
+  static String urlGetNewsByType ="http://192.168.2.15/server/getAllNewsByType.php";
   static String extractPubDate(xml.XmlElement item) {
     var pubDateElement = item.findElements('pubDate').single;
     var pubDateText = pubDateElement.text;
@@ -163,5 +164,29 @@ class NewsApi {
       throw Exception('Failed to load news articles: ${response.statusCode}');
     }
   }
+  static Future<List<NewsArticle>> getNewsByType(String type) async {
+    try {
+      var url = Uri.parse(urlGetNewsByType);
+      var response = await http.post(url, body: {'type': type});
+
+      if (response.statusCode == 200) {
+        print(response.body);
+
+        var data = json.decode(response.body);
+        List<NewsArticle> articles = List.from(data.map((item) {
+          Map<String, dynamic> articleMap = item;
+          return NewsArticle.fromJsonDB(articleMap);
+        }));
+        return articles;
+      } else {
+        // Handle HTTP request error
+        throw Exception('Failed to load news articles: ${response.statusCode}');
+      }
+    } catch (error) {
+      // Handle general error
+      throw Exception('Failed to load news articles: $error');
+    }
+  }
+
 }
 

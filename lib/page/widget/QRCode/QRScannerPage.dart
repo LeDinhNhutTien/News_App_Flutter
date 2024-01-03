@@ -31,7 +31,7 @@ class _QRCodeGeneratorState extends State<QRCodeGenerator> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('QR Code Generator'),
+        title: const Text('QR Code Generator'),
       ),
       body: Center(
         child: Column(
@@ -39,9 +39,9 @@ class _QRCodeGeneratorState extends State<QRCodeGenerator> {
           children: [
             qrData != null
                 ? QrImageView(data: qrData!, version: QrVersions.auto, size: 200.0)
-                : SizedBox(height: 200.0),
-            SizedBox(height: 20.0),
-            Text(
+                : const SizedBox(height: 200.0),
+            const SizedBox(height: 20.0),
+            const Text(
               'Scan QR Code to visit:',
               style: TextStyle(fontSize: 18.0),
             ),
@@ -78,7 +78,7 @@ class _QRCodeGeneratorState extends State<QRCodeGenerator> {
 class ContactFormDialog extends StatelessWidget {
   final Function(String, String, String) onFormSubmit;
 
-  ContactFormDialog({required this.onFormSubmit});
+  ContactFormDialog({super.key, required this.onFormSubmit});
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -87,25 +87,25 @@ class ContactFormDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Contact Information'),
+      title: const Text('Contact Information'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           TextField(
             controller: nameController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Name',
             ),
           ),
           TextField(
             controller: emailController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Email',
             ),
           ),
           TextField(
             controller: phoneController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Phone',
             ),
           ),
@@ -119,7 +119,7 @@ class ContactFormDialog extends StatelessWidget {
             final phone = phoneController.text;
             onFormSubmit(name, email, phone);
           },
-          child: Text('Save'),
+          child: const Text('Save'),
         ),
       ],
     );

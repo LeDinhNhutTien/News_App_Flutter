@@ -1,212 +1,69 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:xml2json/xml2json.dart';
 import 'package:flutter_news_app/page/admin/HomeAdmin.dart';
 import 'package:flutter_news_app/page/history/histories.dart';
 import 'package:flutter_news_app/page/home/news_web_view.dart';
-
+import 'package:flutter_news_app/page/model/NewsArticle.dart';
 import 'package:flutter_news_app/page/user/google.dart';
 import 'package:flutter_news_app/page/user/login.dart';
 import 'package:flutter_news_app/page/user/profile.dart';
 import 'package:flutter_news_app/page/user/userauth.dart';
+import 'package:news_api_flutter_package/news_api_flutter_package.dart';
 import 'package:provider/provider.dart';
 
-import 'package:xml2json/xml2json.dart';
-import 'package:http/http.dart' as http;
-
+import '../PHP/NewsApi.dart';
+import '../model/Category.dart';
 import '../widget/home_widget.dart';
 import '../widget/lottery.dart';
 
 class NewsPage extends StatefulWidget {
-  const NewsPage({super.key});
+  const NewsPage({Key? key}) : super(key: key);
 
   @override
-  State<NewsPage> createState() => _NewsPageState();
+  _NewsPageState createState() => _NewsPageState();
 }
 
 class _NewsPageState extends State<NewsPage> {
-  late Future future;
-
+  List<NewsArticle> list = [];
   String? searchTerm;
   bool isSearching = false;
   TextEditingController searchController = TextEditingController();
   List<String> categoryItems = [
-    "Thể thao",
-    "Sức khỏe",
-    "Xe",
-    "Kinh doanh",
-    "Khoa học",
-    "Giải trí",
-    "Giáo dục",
-    "Thế giới"
+    "Thể thao", "Sức khỏe", "Xe", "Kinh doanh", "Khoa học",
+    "Giải trí", "Giáo dục", "Thế giới"
   ];
-
   late String selectedCategory;
-  late String chooseLink ='https://vtc.vn/rss/feed.rss';
 
   @override
   void initState() {
     selectedCategory = categoryItems[0];
-    future = getNewsData('https://vtc.vn/rss/feed.rss');
-
     super.initState();
   }
 
-  final Xml2Json xml2json = Xml2Json();
-  List topStories = [];
-
-  Future<void> getNewsData(String urllink) async {
-    try {
-      final url = Uri.parse(urllink);
-      final response = await http.get(url);
-      if (response.body.isEmpty) {
-        // print('Empty response');
-        return;
-      }
-      try {
-        xml2json.parse(response.body.toString());
-        var JSONata = await xml2json.toGData();
-        var data = json.decode(JSONata);
-        topStories = data['rss']['channel']['item'];
-        // print(topStories);
-      } catch (e) {
-        // print('Error parsing XML: $e');
-      }
-    } catch (e) {
-      // print("Error in getNewsData: $e");
-    }
-  }
-
   int _currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: isSearching ? searchAppBar() : appBar(),
+      appBar: isSearching ? _buildSearchAppBar() : _buildAppBar(),
       body: SafeArea(
-          child: Column(
-            children: [
-              _buildCategories(),
-              Expanded(
-                child: FutureBuilder(
-                  future: getNewsData(chooseLink),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else if (snapshot.hasError) {
-                      return const Center(
-                        child: Text("Error loading the news"),
-                      );
-                    } else {
-                      return _buildNewsListView();
-                    }
-                  },
-                ),
-              )
-            ],
-          )),
-      bottomNavigationBar: BottomNavigationBar(
-        fixedColor: Colors.black,
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home'
-          ),BottomNavigationBarItem(
-              icon: Icon(Icons.widgets),
-              label: 'Widget'
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.history),
-              label: 'History'
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Personal'
-          ),
-        ],
-        currentIndex: _currentIndex,
-        onTap: (index){
-          // Use Navigator to navigate to the corresponding pages
-          switch (index) {
-            case 0:
-            // Navigate to the Home page
-            // Replace 'YourHomePage()' with the widget representing your home page
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const NewsPage()),
-              );
-              break;
-            case 1:
-            // Navigate to the History page
-            // Replace 'YourHistoryPage()' with the widget representing your history page
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Home_Widget()),
-              );
-              break;
-            case 2:
-            // Navigate to the Personal page
-            // Replace 'YourPersonalPage()' with the widget representing your personal page
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Histories()),
-              );
-              break;
-            case 3:
-
-              final userAuth = Provider.of<UserAuth>(context, listen: false);
-
-              if (userAuth.isLoggedIn) {
-                final isAdmin = userAuth.userData['isAdmin'] ?? 2;
-                print('is' + isAdmin.toString());
-                if(isAdmin == 1){
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Profile(userData: userAuth.userData), // Pass the userData here
-                    ),
-                  );
-                }
-                else{
-                  if(isAdmin== 0){
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AdminApp(), // Pass the userData here
-                      ),
-                    );
-                  }
-
-                }
-
-                if(isAdmin== 2){
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SignInDemo(), // Pass the userData here
-                    ),
-                  );
-                }
-
-              } else {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Login()),
-                );
-              }
-              break;
-          }
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+        child: Column(
+          children: [
+            _buildCategories(),
+            Expanded(
+              child: _buildNewsListView(),
+            )
+          ],
+        ),
       ),
+      bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
 
-  searchAppBar() {
+  // App Bar Widgets
+
+  AppBar _buildSearchAppBar() {
     return AppBar(
       backgroundColor: Colors.green,
       leading: IconButton(
@@ -216,7 +73,6 @@ class _NewsPageState extends State<NewsPage> {
             isSearching = false;
             searchTerm = null;
             searchController.text = "";
-            future = getNewsData(chooseLink);
           });
         },
       ),
@@ -237,100 +93,101 @@ class _NewsPageState extends State<NewsPage> {
       ),
       actions: [
         IconButton(
-            onPressed: () {
-              setState(() {
-                searchTerm = searchController.text;
-                future = getNewsData(chooseLink);
-              });
-            },
-            icon: const Icon(Icons.search)),
+          onPressed: () {
+            setState(() {
+              searchTerm = searchController.text;
+            });
+          },
+          icon: const Icon(Icons.search),
+        ),
       ],
     );
   }
 
-  // tim kiem va tieu de
-  appBar() {
+  AppBar _buildAppBar() {
     return AppBar(
       backgroundColor: const Color.fromARGB(255, 200, 220, 239),
       title: const Text("NEWS APP"),
       centerTitle: true,
       actions: [
         IconButton(
-            onPressed: () {
-              setState(() {
-                isSearching = true;
-              });
-            },
-            icon: const Icon(Icons.search)),
+          onPressed: () {
+            setState(() {
+              isSearching = true;
+            });
+          },
+          icon: const Icon(Icons.search),
+        ),
       ],
     );
   }
 
+// News List View Widget
   Widget _buildNewsListView() {
     final userAuth = Provider.of<UserAuth>(context, listen: false);
-    final id = userAuth.userData['id'].toString() ;
+    final id = userAuth.userData['id'].toString();
+
     return ListView.builder(
-        shrinkWrap: true,
-        controller: ScrollController(),
-        itemCount: topStories.length,
-        itemBuilder: (BuildContext context, int index){
-          // Get the image path from the 'description' field
-          String description = topStories[index]['description']?['\$t'] ?? '';
-          String date = topStories[index]['pubDate']['\$t'] ;
-          // Parse the HTML content to extract the image path
-          RegExp regex = RegExp(r'<img alt="[^"]+" src="([^"]+)"');
-          Match? match = regex.firstMatch(description);
-          String title =topStories[index]['title']['\$t'];
-          // Check if a match is found
-          String? imagePath = match?.group(1);
-          return Container(
-            decoration: const BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                      blurRadius: 2,
-                      spreadRadius: 2,
-                      color: Colors.black12)
-                ]),
-            child: ListTile(
-              onTap: (){
-                Navigator.push(context,
-                    MaterialPageRoute(builder:
-                        (BuildContext context) => NewsWebView(url: topStories[index]['link']['\$t']
-                    )));
+      shrinkWrap: true,
+      controller: ScrollController(),
+      itemCount: list.length,
+      itemBuilder: (BuildContext context, int index) {
+        String description = list[index].description ?? '';
+        String date = list[index].date;
+        String title = list[index].title;
+        String? imagePath = list[index].image;
 
-                if (imagePath != null && description != null) {
-
-                  insertHistory(id, imagePath, title);
-                }
-
-              },
-              horizontalTitleGap: 10,
-              minVerticalPadding: 10,
-              contentPadding: const EdgeInsets.symmetric(
-                  vertical: 10, horizontal: 10),
-              title: Text(topStories[index]['title']['\$t'],
-                  maxLines: 2, overflow: TextOverflow.ellipsis
-              ),
-              subtitle: Text(
-                date.substring(5, date.length-9),
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-              ),
-              leading: SizedBox(
-                width: 80,
-                height: 80,
-                child: Image.network(
-                  imagePath ?? 'https://image.24h.com.vn/upload/4-2023/images/2023-11-11/1699639283-848-thumbnail-width740height555.jpg',
-                  fit: BoxFit.cover,
+        return Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(blurRadius: 2, spreadRadius: 2, color: Colors.black12),
+            ],
+          ),
+          child: ListTile(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      NewsWebView(url: list[index].url),
                 ),
+              );
+
+              if (imagePath != null && description != null) {
+                insertHistory(id, imagePath, title);
+              }
+            },
+            horizontalTitleGap: 10,
+            minVerticalPadding: 10,
+            contentPadding:
+            const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            title: Text(
+              list[index].title,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            subtitle: Text(
+              date,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+            ),
+            leading: SizedBox(
+              width: 80,
+              height: 80,
+              child: Image.network(
+                imagePath ??
+                    'https://image.24h.com.vn/upload/4-2023/images/2023-11-11/1699639283-848-thumbnail-width740height555.jpg',
+                fit: BoxFit.cover,
               ),
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 
-// xu ly danh muc
+// Categories Widget
   Widget _buildCategories() {
     return SizedBox(
       height: 60,
@@ -340,52 +197,22 @@ class _NewsPageState extends State<NewsPage> {
             padding: const EdgeInsets.all(8),
             child: ElevatedButton(
               onPressed: () {
-                setState(() {
+                setState(() async {
                   selectedCategory = categoryItems[index];
                   int indexx = categoryItems.indexOf(selectedCategory);
+                  _onCategoryButtonPressed(indexx);
 
-                  switch(indexx){
-                    case 0:
-                      chooseLink = 'https://vtc.vn/rss/the-thao.rss';
-                      future = getNewsData(chooseLink);
-                      break;
-                    case 1:
-                      chooseLink = 'https://vtc.vn/rss/suc-khoe.rss';
-                      future = getNewsData(chooseLink);
-                      break;
-                    case 2:
-                      chooseLink = 'https://vtc.vn/rss/oto-xe-may.rss';
-                      future = getNewsData(chooseLink);
-                      break;
-                    case 3:
-                      chooseLink = 'https://vtc.vn/rss/kinh-te.rss';
-                      future = getNewsData(chooseLink);
-                      break;
-                    case 4:
-                      chooseLink = 'https://vtc.vn/rss/khoa-hoc-cong-nghe.rss';
-                      future = getNewsData(chooseLink);
-                      break;
-                    case 5:
-                      chooseLink = 'https://vtc.vn/rss/van-hoa-giai-tri.rss';
-                      future = getNewsData(chooseLink);
-                      break;
-                    case 6:
-                      chooseLink = 'https://vtc.vn/rss/giao-duc.rss';
-                      future = getNewsData(chooseLink);
-                      break;
-                    case 7:
-                      chooseLink = 'https://vtc.vn/rss/the-gioi.rss';
-                      future = getNewsData(chooseLink);
-                      break;
                   }
-                });
+
+                );
               },
               style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                    categoryItems[index] == selectedCategory
-                        ? Colors.blue.withOpacity(0.5)
-                        : Colors.blue,
-                  )),
+                backgroundColor: MaterialStateProperty.all<Color>(
+                  categoryItems[index] == selectedCategory
+                      ? Colors.blue.withOpacity(0.5)
+                      : Colors.blue,
+                ),
+              ),
               child: Text(categoryItems[index]),
             ),
           );
@@ -395,22 +222,134 @@ class _NewsPageState extends State<NewsPage> {
       ),
     );
   }
-  Future<void> insertHistory(String id ,String imageUrl, String title) async {
+  void _onCategoryButtonPressed(int indexx) async {
+    try {
+      String selectedCategory = Category.categories[indexx];
+      List<NewsArticle> newsList = await NewsApi.getNewsByType(selectedCategory);
+      setState(() {
+        list = newsList;
+      });
+    } catch (e) {
+      print('Lỗi khi tải tin tức: $e');
+    }
+  }
+
+  // Bottom Navigation Bar Widget
+
+  BottomNavigationBar _buildBottomNavigationBar() {
+    return BottomNavigationBar(
+      fixedColor: Colors.black,
+      type: BottomNavigationBarType.fixed,
+      items: const [
+        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+        BottomNavigationBarItem(icon: Icon(Icons.widgets), label: 'Widget'),
+        BottomNavigationBarItem(icon: Icon(Icons.history), label: 'History'),
+        BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Personal'),
+      ],
+      currentIndex: _currentIndex,
+      onTap: (index) => _onBottomNavigationBarItemTapped(index),
+    );
+  }
+
+  void _onBottomNavigationBarItemTapped(int index) {
+    switch (index) {
+      case 0:
+        _navigateToNewsPage();
+        break;
+      case 1:
+        _navigateToHomeWidget();
+        break;
+      case 2:
+        _navigateToHistories();
+        break;
+      case 3:
+        _navigateToUserProfile();
+        break;
+    }
+
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
+  // Navigation Functions
+
+  void _navigateToNewsPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const NewsPage()),
+    );
+  }
+
+  void _navigateToHomeWidget() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Home_Widget()),
+    );
+  }
+
+  void _navigateToHistories() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Histories()),
+    );
+  }
+
+  void _navigateToUserProfile() {
+    final userAuth = Provider.of<UserAuth>(context, listen: false);
+    final isAdmin = userAuth.userData['isAdmin'] ?? 2;
+
+    if (userAuth.isLoggedIn) {
+      if (isAdmin == 1) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Profile(userData: userAuth.userData),
+          ),
+        );
+      } else if (isAdmin == 0) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AdminApp(),
+          ),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SignInDemo(),
+          ),
+        );
+      }
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Login()),
+      );
+    }
+  }
+
+  // Other Function
+
+Future<void> insertHistory(
+      String id, String imageUrl, String title) async {
     final uri = Uri.parse('http://172.27.240.1/server/history.php'); // URL to your PHP script
     try {
       final response = await http.post(uri, body: {
         'user_id': id, // Make sure this matches the expected key in your PHP
         'image': imageUrl,
         'title': title,
-        'create_at': DateTime.now().toIso8601String(), // Sends the current date and time
+        'create_at': DateTime.now()
+            .toIso8601String(), // Sends the current date and time
       });
 
       if (response.statusCode == 200) {
-        // If server returns an OK response, print the body
+        // If the server returns an OK response, print the body
         print('Response data: ${response.body}');
       } else {
         // If the server did not return a 200 OK response,
-        // then throw an exception.
+        // throw an exception.
         print('Failed to load data: ${response.statusCode}');
       }
     } catch (e) {
@@ -418,5 +357,3 @@ class _NewsPageState extends State<NewsPage> {
     }
   }
 }
-
-
