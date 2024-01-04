@@ -29,7 +29,7 @@ class _HistoriesState extends State<Histories> {
   }
 
   Future<void> fetchHistoriesByUserId(String userId) async {
-    final uri = Uri.parse('http://172.26.208.1/server/gethistory.php?user_id=$userId');
+    final uri = Uri.parse('http://172.22.208.1/server/gethistory.php?user_id=$userId');
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
