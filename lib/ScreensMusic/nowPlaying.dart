@@ -6,12 +6,14 @@ import "package:flutter/material.dart";
 import "package:just_audio_background/just_audio_background.dart";
 import "package:on_audio_query/on_audio_query.dart";
 import "package:provider/provider.dart";
+import 'package:flutter_news_app/page/widget/music.dart';
 
 class NowPlaying extends StatefulWidget {
-    const NowPlaying({Key? key, required this.songModel, required this.audioPlayer}):super(key: key);
+    const NowPlaying({Key? key, required this.songModel, required this.audioPlayer, required this.allSongs}):super(key: key);
     final SongModel songModel;
     // final List<SongModel> songModel;
     final  AudioPlayer audioPlayer;
+    final List<SongModel> allSongs;
     @override
     State<NowPlaying> createState() => _NowPlayingState();
   }
@@ -19,6 +21,7 @@ class NowPlaying extends StatefulWidget {
   class _NowPlayingState extends State<NowPlaying> {
     Duration _duration=const Duration();
     Duration _position=const Duration();
+    int currentSongIndex=0;
 
 
     bool _isPlaying = false;
@@ -36,80 +39,33 @@ class NowPlaying extends StatefulWidget {
     void initState() {
       // TODO: implement initState
       super.initState();
-      playSong();
+      currentSongIndex = widget.allSongs.indexOf(widget.songModel); // Cập nhật chỉ số bài hát hiện tại
+
+      playSong(currentSongIndex);
     }
 
-    // void playSong(){
-    //   try{
-    //     widget.audioPlayer.setAudioSource(
-    //       AudioSource.uri(
-    //         Uri.parse(widget.songModel.uri!),
-    //         tag: MediaItem(
-    //             id: widget.songModel.id.toString(),
-    //             album: widget.songModel.album ?? "No album",
-    //             title: widget.songModel.displayNameWOExt,
-    //             artUri: Uri.parse(widget.songModel.id.toString()),
-    //         )
-    //       )
-    //     );
-    //     widget.audioPlayer.play();
-    //     _isPlaying=true;
-    //
-    //     widget.audioPlayer.durationStream.listen((duration) {
-    //       if(_duration!=null){
-    //         setState(() {
-    //           _duration=_duration;
-    //         });
-    //       }
-    //     });
-    //     widget.audioPlayer.positionStream.listen((position) {
-    //       if(_position!=null){
-    //         setState(() {
-    //           _position=_position;
-    //         });
-    //       }
-    //     });
-    //     listenToEvent();
-    //   } on  Exception catch(_){
-    //     popBack();
-    //   }
-    // }
-    //
-    // void listenToEvent(){
-    //   widget.audioPlayer.playerStateStream.listen((state) {
-    //     if (state.playing){
-    //       setState(() {
-    //         _isPlaying = true;
-    //       });
-    //     }else{
-    //       setState(() {
-    //         _isPlaying=false;
-    //       });
-    //     }
-    //     if(state.processingState==ProcessingState.completed){
-    //       setState(() {
-    //         _isPlaying=false;
-    //       });
-    //     }
-    //   });
-    // }
-
-    void playSong(){
+    void playSong(int index){
       try{
+        currentSongIndex = index;
+        var song = widget.allSongs[index];
+        if(song.uri!=null){
           widget.audioPlayer
-            .setAudioSource(
-            AudioSource.uri(
-                Uri.parse(widget.songModel.uri!),
-              tag: MediaItem(
-                id: '${widget.songModel.id}',
-                album: "${widget.songModel.album}",
-                title: widget.songModel.displayNameWOExt,
-                artUri: Uri.parse('https://example.com/albumart.jpg'),
-              ),
-            )
-        );
+              .setAudioSource(
+              AudioSource.uri(
+                Uri.parse(song.uri!),
+                tag: MediaItem(
+                  id: '${song.id}',
+                  album: "${song.album}",
+                  title: song.displayNameWOExt,
+                  artUri: Uri.parse('https://example.com/albumart.jpg'),
+                ),
+              )
+          );
           widget.audioPlayer.play();
-        _isPlaying=true;
+          _isPlaying=true;
+        }else{
+          log("Song URI is null");
+        }
       } on Exception{
         log("Cannot parse song");
       }
@@ -125,7 +81,17 @@ class NowPlaying extends StatefulWidget {
       });
     }
 
+    void playPreviousSong() {
+      if (currentSongIndex > 0) {
+        playSong(currentSongIndex - 1);
+      }
+    }
 
+    void playNextSong() {
+      if (currentSongIndex < widget.allSongs.length - 1) {
+        playSong(currentSongIndex + 1);
+      }
+    }
   @override
   Widget build(BuildContext context) {
       double height=MediaQuery.of(context).size.height;
@@ -158,7 +124,7 @@ class NowPlaying extends StatefulWidget {
                       height: 30.0,
                     ),
                       Text(
-                        widget.songModel.displayNameWOExt,
+                        widget.allSongs[currentSongIndex].displayNameWOExt,
                         overflow: TextOverflow.fade,
                         maxLines: 1,
                         style: const TextStyle(
@@ -170,7 +136,7 @@ class NowPlaying extends StatefulWidget {
                       height: 10.0,
                     ),
                     Text(
-                      widget.songModel.artist.toString() == "<unknown>"?"<Unknown Artist>":widget.songModel.artist.toString(),
+                      widget.allSongs[currentSongIndex].artist.toString() == "<unknown>"?"<Unknown Artist>":widget.songModel.artist.toString(),
                       overflow: TextOverflow.fade,
                       maxLines: 1,
                       style: TextStyle(
@@ -197,30 +163,15 @@ class NowPlaying extends StatefulWidget {
                         Text(_duration.toString().split(".")[0]),
                       ],
                     ),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //   crossAxisAlignment: CrossAxisAlignment.center,
-                    //   children: [
-                    //     Text(
-                    //       _position.toString().split(".")[0],
-                    //     ),
-                    //     Text(
-                    //       _duration.toString().split(".")[0],
-                    //     )
-                    //     ],
-                    // ),
+
                         const SizedBox(
                           height: 20.0,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children:[
-                        IconButton(onPressed: (){
-                          if(widget.audioPlayer.hasPrevious){
-                            widget.audioPlayer.seekToPrevious();
-
-                          }
-                        }, icon: const Icon(
+                        IconButton(onPressed: playPreviousSong,
+                          icon: const Icon(
                           Icons.skip_previous,
                           size: 24.0,)
                           ,),
@@ -242,11 +193,8 @@ class NowPlaying extends StatefulWidget {
                           _isPlaying ? Icons.pause: Icons.play_arrow,
                           size: 40,
                           color: Colors.orangeAccent,),),
-                        IconButton(onPressed: (){
-                          if(widget.audioPlayer.hasNext){
-                            widget.audioPlayer.seekToNext();
-                          }
-                        }, icon: const Icon(Icons.skip_next,size: 24.0,),),
+                        IconButton(onPressed: playNextSong
+                          , icon: const Icon(Icons.skip_next,size: 24.0,),),
                       ],
                     )
                   ],

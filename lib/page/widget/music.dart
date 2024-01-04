@@ -45,7 +45,6 @@ class _MusicState extends State<Music> {
 
   }
 
-
   @override
   void initState() {
     // TODO: implement initState
@@ -130,7 +129,7 @@ class _MusicState extends State<Music> {
                     Navigator.push(context,
                         MaterialPageRoute(
                             builder: (context)=>
-                                NowPlaying(songModel: item.data![index],audioPlayer: _audioPlayer,),
+                                NowPlaying(songModel: item.data![index],audioPlayer: _audioPlayer,allSongs:allSongs,),
                         ),
                     );
                   },
