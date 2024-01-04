@@ -210,7 +210,7 @@ class _EmailOtpState extends State<EmailOtp> {
     );
   }
   Future<void> updatePassword(String newPass,String email) async {
-    final String url = "http://172.27.240.1/server/updatepassword.php";
+    final String url = "http://172.22.208.1/server/updatepassword.php";
     var response = await http.post(
       Uri.parse(url),
       body: {
