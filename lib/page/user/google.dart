@@ -71,7 +71,7 @@ class _SignInDemoState extends State<SignInDemo> {
 
   void _startSignInAttempt() {
     if (_currentUser == null && !_isSigningIn) {
-      // Cancelling any existing timer
+
       _signInTimer?.cancel();
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
