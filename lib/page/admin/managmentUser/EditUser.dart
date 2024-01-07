@@ -152,7 +152,7 @@ class _EditUserState extends State<EditUser> {
       password: _passwordController.text,
       isAdmin: _isAdmin,
     );
-    updateUser(updatedUser,widget.user.email);
+    UserApi.updateUser(updatedUser,widget.user.email);
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const UserAdmin()),
