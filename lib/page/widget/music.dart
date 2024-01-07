@@ -52,15 +52,6 @@ class _MusicState extends State<Music> {
 
   }
   void requestPermission() async{
-    // if(Platform.isAndroid){
-    //   bool permissionStatus= await _audioQuery.permissionsStatus();
-    //   if(!permissionStatus){
-    //     await _audioQuery.permissionsRequest();
-    //   }
-    //   setState(() {
-    //
-    //   });
-    // }
 
     Permission.storage.request();
   }
