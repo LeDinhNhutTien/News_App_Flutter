@@ -4,12 +4,13 @@ import '../model/NewsArticle.dart';
 import 'package:xml/xml.dart' as xml;
 
 class NewsApi {
-  static String urlGetAll ="http://192.168.2.15/server/getAllNews.php";
-  static String urlArticleExistsInDatabase ="http://192.168.2.15/server/checkTitleAndCreate.php";
-  static String urlSaveNewsArticle ="http://192.168.2.15/server/saveNews.php";
-  static String urlDeleteNewsArticle ="'http://192.168.2.15/server/deleteNews.php'";
-  static String urlUpdateNewsArticle ="''http://192.168.2.15/server/updateNews.php''";
-  static String urlGetNewsByType ="http://192.168.2.15/server/getAllNewsByType.php";
+  static String ip = "192.168.2.15";
+  static String urlGetAll ="http://$ip/server/getAllNews.php";
+  static String urlArticleExistsInDatabase ="http://$ip/server/checkTitleAndCreate.php";
+  static String urlSaveNewsArticle ="http://$ip/server/saveNews.php";
+  static String urlDeleteNewsArticle ="'http://$ip/server/deleteNews.php'";
+  static String urlUpdateNewsArticle ="''http://$ip/server/updateNews.php''";
+  static String urlGetNewsByType ="http://$ip/server/getAllNewsByType.php";
   static String extractPubDate(xml.XmlElement item) {
     var pubDateElement = item.findElements('pubDate').single;
     var pubDateText = pubDateElement.text;
