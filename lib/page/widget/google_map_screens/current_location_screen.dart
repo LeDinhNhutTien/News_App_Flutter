@@ -29,7 +29,7 @@ class _CurrentLocationScreenState extends State<CurrentLocationScreen> {
         zoomControlsEnabled: false,
         mapType: MapType.normal,
         onMapCreated: (GoogleMapController controller) {
-          googleMapController = controller;
+          googleMapController = controller;z
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
