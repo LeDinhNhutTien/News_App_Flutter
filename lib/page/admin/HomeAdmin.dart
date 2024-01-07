@@ -8,7 +8,7 @@ import 'package:flutter_news_app/page/widget/home_widget.dart';
 import 'package:flutter_news_app/page/widget/lottery.dart';
 import 'package:provider/provider.dart';
 
-import 'loadNews/TrongNuoc.dart';
+import 'loadNews/DuyetBaoMoi.dart';
 import 'managmentUser/UserAdmin.dart';
 
 void main() {
@@ -199,7 +199,7 @@ class NavigationDrawer extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const TrongNuoc()),
+                MaterialPageRoute(builder: (context) => const DuyetBaoMoi()),
               );
             },
           ),
