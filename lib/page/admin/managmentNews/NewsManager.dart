@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_news_app/page/admin/managmentNews/UpdateNewsDB.dart';
-import 'package:flutter_news_app/page/PHP/NewsApi.dart';
 import 'package:provider/provider.dart';
-import '../../model/NewsArticle.dart';
 import '../../user/login.dart';
 import '../../user/userauth.dart';
+import '../PHP/NewsApi.dart';
 import '../loadNews/EditNewsPage.dart';
 import '../HomeAdmin.dart';
 import '../loadNews/DuyetBaoMoi.dart';
 import '../managmentUser/UserAdmin.dart';
+import '../model/NewsArticle.dart';
 
 void main() {
   runApp(const NewsManager());

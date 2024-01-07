@@ -1,7 +1,9 @@
-import 'package:flutter_news_app/page/model/User.dart';
+
 import 'dart:convert';
+import 'package:flutter_news_app/page/admin/model/User.dart';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml;
+
 
 
 class UserApi {

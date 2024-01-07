@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../model/NewsArticle.dart';
+
+import '../model/NewsArticle.dart';
+
 
 class EditNewsPage extends StatefulWidget {
   final NewsArticle newsArticle;

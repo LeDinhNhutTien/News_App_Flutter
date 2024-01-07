@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_news_app/page/admin/model/User.dart';
 import 'package:provider/provider.dart';
-import '../../PHP/UserApi.dart';
-import '../../model/User.dart';
+
 import '../../user/login.dart';
 import '../../user/userauth.dart';
 import '../HomeAdmin.dart';
+import '../PHP/UserApi.dart';
 import '../managmentNews/NewsManager.dart';
 import '../loadNews/DuyetBaoMoi.dart';
 import 'EditUser.dart';

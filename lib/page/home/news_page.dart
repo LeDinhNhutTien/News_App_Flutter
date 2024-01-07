@@ -4,16 +4,15 @@ import 'package:xml2json/xml2json.dart';
 import 'package:flutter_news_app/page/admin/HomeAdmin.dart';
 import 'package:flutter_news_app/page/history/histories.dart';
 import 'package:flutter_news_app/page/home/news_web_view.dart';
-import 'package:flutter_news_app/page/model/NewsArticle.dart';
 import 'package:flutter_news_app/page/user/google.dart';
 import 'package:flutter_news_app/page/user/login.dart';
 import 'package:flutter_news_app/page/user/profile.dart';
 import 'package:flutter_news_app/page/user/userauth.dart';
 import 'package:news_api_flutter_package/news_api_flutter_package.dart';
 import 'package:provider/provider.dart';
-
-import '../PHP/NewsApi.dart';
-import '../model/Category.dart';
+import '../admin/PHP/NewsApi.dart';
+import '../admin/model/Category.dart';
+import '../admin/model/NewsArticle.dart';
 import '../widget/home_widget.dart';
 import '../widget/lottery.dart';
 
@@ -26,6 +25,7 @@ class NewsPage extends StatefulWidget {
 
 class _NewsPageState extends State<NewsPage> {
   List<NewsArticle> list = [];
+
   String? searchTerm;
   bool isSearching = false;
   TextEditingController searchController = TextEditingController();
@@ -33,6 +33,7 @@ class _NewsPageState extends State<NewsPage> {
     "Thể thao", "Sức khỏe", "Xe", "Kinh doanh", "Khoa học",
     "Giải trí", "Giáo dục", "Thế giới"
   ];
+
   late String selectedCategory;
 
   @override
@@ -189,6 +190,7 @@ class _NewsPageState extends State<NewsPage> {
 
 // Categories Widget
   Widget _buildCategories() {
+   
     return SizedBox(
       height: 60,
       child: ListView.builder(
@@ -334,7 +336,7 @@ class _NewsPageState extends State<NewsPage> {
 
 Future<void> insertHistory(
       String id, String imageUrl, String title) async {
-    final uri = Uri.parse('http://172.27.240.1/server/history.php'); // URL to your PHP script
+    final uri = Uri.parse('http://192.168.2.15/server/history.php'); // URL to your PHP script
     try {
       final response = await http.post(uri, body: {
         'user_id': id, // Make sure this matches the expected key in your PHP
