@@ -8,7 +8,7 @@ import 'package:flutter_news_app/page/widget/home_widget.dart';
 import 'package:flutter_news_app/page/widget/lottery.dart';
 import 'package:provider/provider.dart';
 
-import 'loadNews/DuyetBaoMoi.dart';
+import 'loadNews/TrongNuoc.dart';
 import 'managmentUser/UserAdmin.dart';
 
 void main() {
@@ -65,7 +65,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Chào mừng bạn đã trở lại',
+                    'Main Content',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -73,7 +73,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                   ),
                   SizedBox(height: 16),
                   Text(
-                    'Quản lý báo mỗi ngày',
+                    'Additional Component',
                     style: TextStyle(
                       fontSize: 18,
                     ),
@@ -199,7 +199,7 @@ class NavigationDrawer extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const DuyetBaoMoi()),
+                MaterialPageRoute(builder: (context) => const TrongNuoc()),
               );
             },
           ),
