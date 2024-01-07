@@ -210,8 +210,6 @@ class NowPlaying extends StatefulWidget {
     Duration duration=Duration(seconds: seconds);
     widget.audioPlayer.seek(duration);
   }
-
-
 }
 
 
