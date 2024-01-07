@@ -37,11 +37,11 @@ class _GoogleMapState extends State<GoogleMap> {
               }));
             }, child: const Text("Vị trí hiện tại")),
 
-            // ElevatedButton(onPressed: (){
-            //   Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
-            //     return const SearchPlacesScreen();
-            //   }));
-            // }, child: const Text("Tìm kiếm địa điểm")),
+            ElevatedButton(onPressed: (){
+              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
+                return const SearchPlacesScreen();
+              }));
+            }, child: const Text("Tìm kiếm địa điểm")),
 
 
             // ElevatedButton(onPressed: (){

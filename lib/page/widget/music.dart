@@ -1,8 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
 
-
-// import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_news_app/ScreensMusic/nowPlaying.dart';
 import 'package:flutter_news_app/provider/song_model_provider.dart';
@@ -45,25 +43,17 @@ class _MusicState extends State<Music> {
 
   }
 
-
   @override
   void initState() {
     // TODO: implement initState
+
     super.initState();
     requestPermission();
+
   }
   void requestPermission() async{
-    if(Platform.isAndroid){
-      bool permissionStatus= await _audioQuery.permissionsStatus();
-      if(!permissionStatus){
-        await _audioQuery.permissionsRequest();
-      }
-      setState(() {
 
-      });
-    }
-    // Permission.storage.request();
-
+    Permission.storage.request();
   }
 
   @override
@@ -105,20 +95,7 @@ class _MusicState extends State<Music> {
             padding: const EdgeInsets.fromLTRB(0,0,0,60),
             itemBuilder: (context,index){
                allSongs.addAll(item.data!);
-               // return GestureDetector(
-               //   onTap: (){
-               //     context.read<SongModelProvider>().setId(item.data![index].id);
-               //     Navigator.push(
-               //       context,
-               //       MaterialPageRoute(
-               //           builder: (context)=>NowPlaying(
-               //               songModel: item.data![index],
-               //               audioPlayer: _audioPlayer)));
-               //   },
-               //   // child: MusicTile(
-               //   //   songModel: item.data![index],
-               //   // ),
-               // );
+
                 return ListTile(
                   title: Text(item.data![index].title),
                   subtitle: Text(item.data![index].artist ?? "No artist"),
@@ -130,7 +107,7 @@ class _MusicState extends State<Music> {
                     Navigator.push(context,
                         MaterialPageRoute(
                             builder: (context)=>
-                                NowPlaying(songModel: item.data![index],audioPlayer: _audioPlayer,),
+                                NowPlaying(songModel: item.data![index],audioPlayer: _audioPlayer,allSongs:allSongs,),
                         ),
                     );
                   },

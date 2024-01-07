@@ -24,19 +24,29 @@ class _SimpleMapScreenState extends State<SimpleMapScreen> {
         title: const Text("Simple Google Map"),
         centerTitle: true,
       ),
-      body: GoogleMap(
-        initialCameraPosition: initialPosition,
-        mapType: MapType.normal,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          goToLake();
-        },
-        label: const Text("Đi đến hồ!"),
-        icon: const Icon(Icons.directions_boat),
+      body: Stack(
+        children: [
+          GoogleMap(
+            initialCameraPosition: initialPosition,
+            mapType: MapType.normal,
+            onMapCreated: (GoogleMapController controller) {
+              _controller.complete(controller);
+            },
+          ),
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0), // Điều chỉnh khoảng cách nếu cần
+              child: FloatingActionButton.extended(
+                onPressed: () {
+                  goToLake();
+                },
+                label: const Text("Đi đến hồ!"),
+                icon: const Icon(Icons.directions_boat),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

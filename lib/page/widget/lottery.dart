@@ -16,7 +16,7 @@ class _LotteryState extends State<Lottery> {
     return Scaffold(
         appBar: AppBar(
             backgroundColor: const Color.fromARGB(255, 200, 220, 239),
-            title: const Text("NEWS APP"),
+            title: const Text("Kết quả sổ xố"),
             actions: [
               IconButton(
                   onPressed: () {
