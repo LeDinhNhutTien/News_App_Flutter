@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../../PHP/UserApi.dart';
 import '../../model/User.dart';
-import '../../user/login.dart';
-import '../../user/userauth.dart';
 import '../HomeAdmin.dart';
 import '../managmentNews/NewsManager.dart';
-import '../loadNews/DuyetBaoMoi.dart';
+import '../loadNews/TrongNuoc.dart';
 import 'EditUser.dart';
 
 void main() {
@@ -43,7 +40,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
   @override
   void initState() {
     super.initState();
-    usersFuture = UserApi.fetchDataDBUser();
+    usersFuture = fetchDataDBUser();
   }
 
   void toggleMenu() {
@@ -105,7 +102,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                             IconButton(
                               icon: const Icon(Icons.delete),
                               onPressed: () {
-                                _showDeleteConfirmationDialog(users[index]);
+                                _deleteUser(users[index]);
                               },
                             ),
                           ],
@@ -137,32 +134,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
       MaterialPageRoute(builder: (context) => EditUser(user: user)),
     );
   }
-  void _showDeleteConfirmationDialog(User user) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Xác nhận xóa'),
-          content: Text('Bạn có chắc chắn muốn xóa người dùng này?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Đóng dialog
-              },
-              child: Text('Hủy'),
-            ),
-            TextButton(
-              onPressed: () {
-                _deleteUser(user); // Gọi hàm xóa người dùng
-                Navigator.of(context).pop(); // Đóng dialog
-              },
-              child: Text('Xóa'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+
   void _showAddUserDialog(BuildContext context) {
     bool isAdmin = false;
 
@@ -276,11 +248,11 @@ class _AdminHomePageState extends State<AdminHomePage> {
         isAdmin: isAdmin,
       );
 
-      await UserApi.saveUser(newUser);
+      await saveUser(newUser);
       await Future.delayed(const Duration(seconds: 1));
 
       setState(() {
-        usersFuture = UserApi.fetchDataDBUser();
+        usersFuture = fetchDataDBUser();
         _isLoading = false;
       });
     } catch (error) {
@@ -298,11 +270,11 @@ class _AdminHomePageState extends State<AdminHomePage> {
         _isLoading = true;
       });
 
-      await UserApi.deleteUser(user);
+      await deleteUser(user);
       await Future.delayed(const Duration(seconds: 1));
 
       setState(() {
-        usersFuture = UserApi.fetchDataDBUser();
+        usersFuture = fetchDataDBUser();
         _isLoading = false;
       });
     } catch (error) {
@@ -310,9 +282,11 @@ class _AdminHomePageState extends State<AdminHomePage> {
       setState(() {
         _isLoading = false;
       });
+      // Handle error, show a message to the user, etc.
     }
   }
 }
+
 class NavigationDrawer extends StatelessWidget {
   const NavigationDrawer({Key? key}) : super(key: key);
 
@@ -344,7 +318,7 @@ class NavigationDrawer extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const DuyetBaoMoi()),
+                MaterialPageRoute(builder: (context) => const TrongNuoc()),
               );
             },
           ),
@@ -368,21 +342,8 @@ class NavigationDrawer extends StatelessWidget {
               );
             },
           ),
-          ListTile(
-            title: const Text('Đăng Xuất'),
-            onTap: () {
-              // Handle when the user taps on the Danh sách bài báo menu item
-              Provider.of<UserAuth>(context, listen: false).logout();
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Login()),
-              );
-            },
-          ),
         ],
       ),
-
     );
-
   }
 }
