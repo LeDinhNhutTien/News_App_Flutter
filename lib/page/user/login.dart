@@ -157,9 +157,8 @@ class _LoginState extends State<Login> {
                       onTap: ()  {
                         // This context now has the Provider above it
 
-                        setState(() {
+
                           Provider.of<UserAuth>(context, listen: false).setLoggedIn(true, userData: null);
-                        });
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => SignInDemo()),
@@ -308,7 +307,7 @@ class _LoginState extends State<Login> {
       passwordError = '';
     });
 
-    var url = "http://172.26.208.1/server/login.php";
+    var url = "http://172.22.208.1/server/login.php";
     var response = await http.post(
       Uri.parse(url),
       body: {

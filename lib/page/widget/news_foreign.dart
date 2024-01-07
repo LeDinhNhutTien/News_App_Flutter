@@ -19,7 +19,6 @@ class _NewsForeignState extends State<NewsForeign> {
   bool isSearching  = false;
   TextEditingController searchController = TextEditingController();
   List<String> categoryItems = [
-    "GRNERAL",
     "BUSINESS",
     "ENTERTAINMENT",
     "HEALTH",

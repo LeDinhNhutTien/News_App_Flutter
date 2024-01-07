@@ -212,7 +212,7 @@ class _RegsterState extends State<Edit> {
   }
 
   void updateUserProfile(String userId, UserAuth userAuth) async {
-    var url = Uri.parse('http://172.26.208.1/server/editUser.php');
+    var url = Uri.parse('http://172.22.208.1/server/editUser.php');
     var response = await http.post(url, body: {
       'id': userId,
       'name': this.name.text,
