@@ -248,7 +248,7 @@ class _RegsterState extends State<Register> {
     }
 
     // If all validations pass, make the network call
-    final String url = "http://172.22.208.1/server/register.php";
+    final String url = "http://192.168.2.15/server/register.php";
     final response = await http.post(
       Uri.parse(url),
       body: {

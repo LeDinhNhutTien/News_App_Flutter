@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_news_app/page/PHP/NewsApi.dart';
-import '../../model/NewsArticle.dart';
+
+import '../PHP/NewsApi.dart';
+import '../model/NewsArticle.dart';
 
 class UpdateNewsDB extends StatefulWidget {
   final NewsArticle newsArticle;

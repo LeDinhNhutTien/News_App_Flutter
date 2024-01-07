@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_news_app/page/admin/managmentUser/UserAdmin.dart';
-import '../../PHP/UserApi.dart';
-import '../../model/User.dart';
+import 'package:flutter_news_app/page/admin/model/User.dart';
+
+import '../PHP/UserApi.dart';
+
 
 class EditUser extends StatefulWidget {
   final User user;
@@ -152,7 +154,7 @@ class _EditUserState extends State<EditUser> {
       password: _passwordController.text,
       isAdmin: _isAdmin,
     );
-    updateUser(updatedUser,widget.user.email);
+    UserApi.updateUser(updatedUser,widget.user.email);
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const UserAdmin()),
