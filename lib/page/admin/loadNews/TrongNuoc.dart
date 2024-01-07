@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_news_app/page/PHP/RssItem.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../model/Category.dart';
-import '../../PHP/NewsApi.dart';
-import '../../model/NewsArticle.dart';
-import 'EditNewsPage.dart';
+import '../../user/login.dart';
+import '../../user/userauth.dart';
 import '../HomeAdmin.dart';
+import '../PHP/NewsApi.dart';
+import '../PHP/RssItem.dart';
 import '../managmentNews/NewsManager.dart';
 import '../managmentUser/UserAdmin.dart';
+import '../model/Category.dart';
+import '../model/NewsArticle.dart';
+import 'EditNewsPage.dart';
 
 void main() {
-  runApp(const TrongNuoc());
+  runApp(const DuyetBaoMoi());
 }
 
-class TrongNuoc extends StatelessWidget {
-  const TrongNuoc({Key? key}) : super(key: key);
+class DuyetBaoMoi extends StatelessWidget {
+  const DuyetBaoMoi({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,12 +41,11 @@ class NewsListPage extends StatefulWidget {
 class _NewsListPageState extends State<NewsListPage> {
   List<NewsArticle> list = [];
   bool isLoading = false;
-  bool isMenuOpen = false;
-  String selectedCategory = Category.categories[0]; // Default selected category
 
-  // List to store selected articles
+  String selectedCategory = Category.categories[0];
   List<NewsArticle> selectedArticles = [];
-
+  bool selectAll = false;
+  bool isMenuOpen = false;
   void toggleMenu() {
     setState(() {
       isMenuOpen = !isMenuOpen;
@@ -54,7 +56,7 @@ class _NewsListPageState extends State<NewsListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Quán lý báo quốc tế'),
+        title: const Text('Duyệt báo mới'),
         leading: IconButton(
           icon: const Icon(Icons.menu),
           onPressed: toggleMenu,
@@ -78,7 +80,6 @@ class _NewsListPageState extends State<NewsListPage> {
                     itemCount: list.length,
                     itemBuilder: (context, index) {
                       final article = list[index];
-                      // Apply category filter
                       if (selectedCategory != "All" &&
                           article.type != selectedCategory) {
                         return const SizedBox();
@@ -116,13 +117,6 @@ class _NewsListPageState extends State<NewsListPage> {
                                 ),
                               ],
                             ),
-                            tileColor: selectedArticles.contains(article)
-                                ? Colors.blue[50]
-                                : null,
-                            onTap: () {
-                              _selectArticle(
-                                  !selectedArticles.contains(article), article);
-                            },
                             trailing: GestureDetector(
                               onTap: () {
                                 _selectArticle(
@@ -130,7 +124,8 @@ class _NewsListPageState extends State<NewsListPage> {
                                     article);
                               },
                               child: Checkbox(
-                                value: selectedArticles.contains(article),
+                                value:
+                                selectAll || selectedArticles.contains(article),
                                 onChanged: (value) {
                                   _selectArticle(value!, article);
                                 },
@@ -139,6 +134,12 @@ class _NewsListPageState extends State<NewsListPage> {
                             onLongPress: () {
                               _editArticle(article);
                             },
+                              onTap: () {
+                                _selectArticle(
+                                    !selectedArticles.contains(article), article);
+                              },
+
+
                           ),
                         ],
                       );
@@ -170,28 +171,48 @@ class _NewsListPageState extends State<NewsListPage> {
     return Container(
       padding: const EdgeInsets.all(16.0),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween, // Align buttons at the ends
         children: [
-          const Text('Category: '),
-          DropdownButton<String>(
-            value: selectedCategory,
-            onChanged: (String? newValue) {
-              setState(() {
-                selectedCategory = newValue!;
-              });
-            },
-            items: [
-
-              ...Category.categories.map((category) {
-                return DropdownMenuItem<String>(
-                  value: category,
-                  child: Text(category),
-                );
-              }).toList(),
+          Row(
+            children: [
+              const Text('Category: '),
+              DropdownButton<String>(
+                value: selectedCategory,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedCategory = newValue!;
+                  });
+                },
+                items: [
+                  ...Category.categories.map((category) {
+                    return DropdownMenuItem<String>(
+                      value: category,
+                      child: Text(category),
+                    );
+                  }).toList(),
+                ],
+              ),
             ],
+          ),
+          ElevatedButton(
+            onPressed: _selectAllArticles,
+            child: Text(selectAll ? 'Bỏ chọn' : 'Duyệt tất cả'),
           ),
         ],
       ),
     );
+  }
+
+
+  void _selectAllArticles() {
+    setState(() {
+      if (selectAll) {
+        selectedArticles.clear();
+      } else {
+        selectedArticles.addAll(list);
+      }
+      selectAll = !selectAll;
+    });
   }
 
   void _openArticle(String url, BuildContext context) async {
@@ -203,11 +224,11 @@ class _NewsListPageState extends State<NewsListPage> {
           context: context,
           builder: (context) =>
               AlertDialog(
-                title: Text('Error'),
-                content: Text('Failed to open the URL.'),
+                title: const Text('Error'),
+                content: const Text('Failed to open the URL.'),
                 actions: [
                   TextButton(
-                    child: Text('OK'),
+                    child:const Text('OK'),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -300,12 +321,12 @@ class _NewsListPageState extends State<NewsListPage> {
       context: context,
       builder: (context) =>
           AlertDialog(
-            title: Text('Save Success'),
+            title: const Text('Save Success'),
             content: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Selected articles removed successfully.'),
-                Text('Removed Articles:'),
+                const Text('Selected articles removed successfully.'),
+                const Text('Removed Articles:'),
                 ...savedArticles.map((article) => Text('- ${article.title}')),
               ],
             ),
@@ -319,7 +340,6 @@ class _NewsListPageState extends State<NewsListPage> {
     );
   }
 }
-
 class NavigationDrawer extends StatelessWidget {
   const NavigationDrawer({Key? key}) : super(key: key);
 
@@ -351,7 +371,7 @@ class NavigationDrawer extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const TrongNuoc()),
+                MaterialPageRoute(builder: (context) => const DuyetBaoMoi()),
               );
             },
           ),
@@ -375,9 +395,21 @@ class NavigationDrawer extends StatelessWidget {
               );
             },
           ),
+          ListTile(
+            title: const Text('Đăng Xuất'),
+            onTap: () {
+              // Handle when the user taps on the Danh sách bài báo menu item
+              Provider.of<UserAuth>(context, listen: false).logout();
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Login()),
+              );
+            },
+          ),
         ],
       ),
+
     );
+
   }
 }
-
