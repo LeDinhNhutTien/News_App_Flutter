@@ -46,26 +46,42 @@ class _SignInDemoState extends State<SignInDemo> {
   void initState() {
     super.initState();
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
-      setState(() {
-        _currentUser = account;
-      });
+      if (mounted) {
+        setState(() {
+          _currentUser = account;
+        });
+      }
       if (_currentUser != null) {
         // User is signed in, update your UserAuth state and cancel any pending sign-in attempts
-        Provider.of<UserAuth>(context, listen: false).updateUser(account);
-        _cancelSignInAttempt();
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (account != null) {
+            if (mounted) {
+              Provider.of<UserAuth>(context, listen: false).updateUser(account);
+              _cancelSignInAttempt();
+            }
+          }
+
+        });
       }
     });
     _googleSignIn.signInSilently();
     _startSignInAttempt();
   }
 
+
   void _startSignInAttempt() {
     if (_currentUser == null && !_isSigningIn) {
-      // No user signed in and no sign-in attempt in progress, start the sign-in process
-      _signInTimer?.cancel(); // Cancel any existing timer
+      // Cancelling any existing timer
+      _signInTimer?.cancel();
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Provider.of<UserAuth>(context, listen: false).setLoggedIn(true, userData: null);
+      });
+
       _signInTimer = Timer(Duration(seconds: 2), _handleSignIn);
     }
   }
+
 
   void _cancelSignInAttempt() {
     _signInTimer?.cancel();
@@ -76,12 +92,13 @@ class _SignInDemoState extends State<SignInDemo> {
 
   @override
   void dispose() {
-    _cancelSignInAttempt(); // Cancel any sign-in attempt when the widget is disposed
+    _signInTimer?.cancel(); // Cancel any sign-in attempt when the widget is disposed
     super.dispose();
   }
 
   Future<void> _handleSignIn() async {
     if (!_isSigningIn) {
+      if (!mounted) return; // Check if the widget is still in the tree
       setState(() {
         _isSigningIn = true;
       });
@@ -92,6 +109,7 @@ class _SignInDemoState extends State<SignInDemo> {
         // Handle sign-in error
         print(error);
       } finally {
+        if (!mounted) return; // Check again if the widget is still in the tree
         setState(() {
           _isSigningIn = false;
         });
@@ -100,49 +118,55 @@ class _SignInDemoState extends State<SignInDemo> {
   }
 
   Future<void> _handleSignOut() async {
+
     await _googleSignIn.disconnect();
     // Update your UserAuth state here
+    Provider.of<UserAuth>(context, listen: false).logout();
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => Login()),
     );
   }
-
   Widget _buildBody() {
+    final userAuth = Provider.of<UserAuth>(context, listen: false);
+
     if (_isSigningIn) {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
-    }
-    else
-      if (_currentUser != null) {
-      GoogleIdentity identity = _currentUser!;
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          ListTile(
-            leading: GoogleUserCircleAvatar(identity: identity),
-            title: Text(_currentUser?.displayName ?? ''),
-            subtitle: Text(_currentUser?.email ?? ''),
-          ),
-          ElevatedButton(
-            onPressed: _handleSignOut,
-            child: const Text('SIGN OUT'),
-          ),
-        ],
-      );
-    } else {
+      return Center(child: CircularProgressIndicator());
+    } else if (userAuth.isLoggedIn) {
+      // Access the user information from the UserAuth provider.
+      final user = userAuth.user; // This should be the user data you set in UserAuth after sign-in.
+      if (user != null) {
         return Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
+
+            ListTile(
+              leading: user.googleIdentity != null ? GoogleUserCircleAvatar(identity: user.googleIdentity!) : null,
+              title: Text(user.displayName ?? ''),
+              subtitle: Text(user.email ?? ''),
+            ),
             ElevatedButton(
-              onPressed: _startSignInAttempt,
-              child: const Text('Sign in with Google'),
+              onPressed: _handleSignOut,
+              child: const Text('SIGN OUT'),
             ),
           ],
         );
+      }
+    } else {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          ElevatedButton(
+            onPressed: _startSignInAttempt,
+            child: const Text('Sign in with Google'),
+          ),
+        ],
+      );
     }
+
+    return SizedBox.shrink();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -195,13 +219,14 @@ class _SignInDemoState extends State<SignInDemo> {
             );
             break;
           case 2:
+
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => Histories()),
             );
             break;
           case 3:
-
+      initState();
             final userAuth = Provider.of<UserAuth>(context, listen: false);
             if (userAuth.isLoggedIn) {
               final isAdmin = userAuth.userData['isAdmin'] ?? 2;
