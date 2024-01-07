@@ -110,33 +110,7 @@ List<EventCalendar>_getEventsForDay(DateTime day){
       appBar: AppBar(title: Text("Lịch vạn niên")),
       floatingActionButton: FloatingActionButton(
         onPressed: ()=> _showAddEditEventDialog()
-        // {
-        //   showDialog(
-        //       context: context,
-        //       builder: (context) {
-        //         return AlertDialog(
-        //           scrollable: true,
-        //           title: Text("Event name"),
-        //           content: Padding(
-        //             padding: EdgeInsets.all(8),
-        //             child: TextField(
-        //               controller: _eventController,
-        //             ),
-        //           ),
-        //           actions: [
-        //             ElevatedButton(
-        //                 onPressed: (){
-        //                   events.addAll({
-        //                     _selectedDay!: [EventCalendar(_eventController.text)]
-        //                   });
-        //                   Navigator.of(context).pop();
-        //                   _selectedEvents.value=_getEventsForDay(_selectedDay!);
-        //                 },
-        //                 child: Text("Submit"),)
-        //           ],
-        //         );
-        //       });
-        // }
+
           ,
         child: Icon(Icons.add),),
       body: Column(
@@ -164,9 +138,6 @@ List<EventCalendar>_getEventsForDay(DateTime day){
                 onPageChanged:(focusedDay){
                   _focusedDay=focusedDay;
                 },
-                // rowHeight: 43,
-                // headerStyle: HeaderStyle(formatButtonVisible: false, titleCentered: true),
-                // availableGestures: AvailableGestures.all,
               ),
             ),
             SizedBox(height: 8.0),

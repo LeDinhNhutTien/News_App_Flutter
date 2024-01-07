@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(),
-        home:  AdminApp(), // Use AuthWrapper here
+        home:  AuthWrapper(), // Use AuthWrapper here
       ),
     );
   }
