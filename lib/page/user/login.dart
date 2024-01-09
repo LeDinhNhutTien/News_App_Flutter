@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:crypto/crypto.dart';
 import 'package:email_auth/email_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -250,7 +251,7 @@ class _LoginState extends State<Login> {
               final userAuth = Provider.of<UserAuth>(context, listen: false);
               if (userAuth.isLoggedIn) {
                 final isAdmin = userAuth.userData['isAdmin'] ?? 2;
-                if(isAdmin == 1){
+                if(isAdmin == 0){
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
@@ -259,7 +260,7 @@ class _LoginState extends State<Login> {
                   );
                 }
                 else{
-                  if(isAdmin== 0){
+                  if(isAdmin== 1){
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
@@ -306,15 +307,16 @@ class _LoginState extends State<Login> {
       emailError = '';
       passwordError = '';
     });
-
-    var url = "http://192.168.2.15/server/login.php";
+    String hashedPassword = md5.convert(utf8.encode(password.text.trim())).toString();
+    var url = "http://172.30.80.1/server/login.php";
     var response = await http.post(
       Uri.parse(url),
       body: {
         'email': email.text,
-        'password': password.text,
+        'password':hashedPassword,
       },
     );
+    print(hashedPassword);
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
@@ -331,7 +333,7 @@ class _LoginState extends State<Login> {
 
 
         });
-        if(isAdmin ==0){
+        if(isAdmin ==1){
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -339,11 +341,9 @@ class _LoginState extends State<Login> {
             ),
           );
         }else{
-          Navigator.pushReplacement(
+          Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) =>Profile(userData: userData), // Pass the userData here
-            ),
+            MaterialPageRoute(builder: (context) => const NewsPage()),
           );
         }
 
@@ -356,6 +356,10 @@ class _LoginState extends State<Login> {
             emailError = 'Mail không tồn tại.';
           } else if (data["message"].contains("Invalid password")) {
             passwordError = 'password not found';
+
+
+            // Print out the hashed password.
+
           } else {
             emailError = 'Login failed. Please try again.';
             passwordError = 'Login failed. Please try again.';

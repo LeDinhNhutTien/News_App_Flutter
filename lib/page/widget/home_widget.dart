@@ -94,7 +94,7 @@ class _Home_WidgetState extends State<Home_Widget> {
                 final userAuth = Provider.of<UserAuth>(context, listen: false);
                 if (userAuth.isLoggedIn) {
                   final isAdmin = userAuth.userData['isAdmin'] ?? 2;
-                  if(isAdmin == 1){
+                  if(isAdmin == 0){
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
@@ -103,7 +103,7 @@ class _Home_WidgetState extends State<Home_Widget> {
                     );
                   }
                   else{
-                    if(isAdmin== 0){
+                    if(isAdmin== 1){
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
