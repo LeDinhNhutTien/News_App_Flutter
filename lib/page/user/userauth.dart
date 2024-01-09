@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_news_app/page/user/User.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-
+/*
+quan li state voi provide
+ */
 class UserAuth extends ChangeNotifier {
   bool _isLoggedIn = false;
   GoogleSignInAccount? _currentUser;
@@ -15,8 +17,12 @@ class UserAuth extends ChangeNotifier {
   bool get isLoggedIn => _isLoggedIn;
 
   Map<String, dynamic> get userData => _userData; // Getter for user data
+
   void updateUserData(Map<String, dynamic> newUserData) {
     _userData = newUserData;
+    /**
+     * lang nghe su kien moi khi thay doi
+     */
     notifyListeners();
   }
 
