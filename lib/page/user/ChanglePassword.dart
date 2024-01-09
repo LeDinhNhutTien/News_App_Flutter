@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_news_app/page/history/histories.dart';
 import 'package:flutter_news_app/page/home/news_page.dart';
 import 'package:flutter_news_app/page/user/Input.dart';
+import 'package:flutter_news_app/page/user/MyButtonConfirm.dart';
 import 'package:flutter_news_app/page/user/login.dart';
 import 'package:flutter_news_app/page/user/userauth.dart';
 import 'package:http/http.dart' as http;
@@ -15,19 +16,20 @@ import 'package:flutter_news_app/page/user/mybuttonsignup.dart';
 import 'package:flutter_news_app/page/widget/home_widget.dart';
 import 'package:flutter_news_app/page/widget/lottery.dart';
 import 'package:password_strength_checker/password_strength_checker.dart';
+import 'package:provider/provider.dart';
 
 
 // Make sure this class is a StatefulWidget if you want to update the current index
-class Register extends StatefulWidget {
-  Register({super.key});
+class ChanPass extends StatefulWidget {
+  ChanPass({super.key});
 
   @override
   _RegsterState createState() => _RegsterState();
 }
 
-class _RegsterState extends State<Register> {
+class _RegsterState extends State<ChanPass> {
   int _currentIndex = 0; // Initial index for the bottom navigation
-  final email = TextEditingController();
+  final old_pass = TextEditingController();
   final password = TextEditingController();
   final conpassword = TextEditingController();
   String emailError = '';
@@ -37,6 +39,9 @@ class _RegsterState extends State<Register> {
   String registrationMessage = '';
 
   Widget build(BuildContext context) {
+    UserAuth  userAuth = Provider.of<UserAuth>(context, listen: false);
+    final id = userAuth.userData['id'].toString() ;
+    print('nay la id' +id);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -50,10 +55,10 @@ class _RegsterState extends State<Register> {
               mainAxisSize: MainAxisSize.min,
               // Add this line to prevent Column from stretching
               children: [
-                Icon(Icons.app_registration, size: 100),
+                Icon(Icons.password, size: 100),
                 const SizedBox(height: 30),
                 Text(
-                  'Welcome to app',
+                  'Đổi mật khẩu',
                   style: TextStyle(
                     color: Colors.grey[700],
                     fontSize: 16.0,
@@ -61,34 +66,34 @@ class _RegsterState extends State<Register> {
                 ),
                 const SizedBox(height: 20),
                 emailError.isNotEmpty ?
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        emailError,
-                        style: TextStyle(color: Colors.red, fontSize: 14),
-                      ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      emailError,
+                      style: TextStyle(color: Colors.red, fontSize: 14),
                     ),
-                  ) : SizedBox.shrink(),
+                  ),
+                ) : SizedBox.shrink(),
 
                 registrationMessage.isNotEmpty ?
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        registrationMessage,
-                        style: TextStyle(color: Colors.green, fontSize: 14),
-                      ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      registrationMessage,
+                      style: TextStyle(color: Colors.green, fontSize: 14),
                     ),
-                  ): SizedBox.shrink(),
+                  ),
+                ): SizedBox.shrink(),
 
 
                 Input(
-                  controller: email,
-                  hintText: 'email',
-                  obscureText: false,
+                  controller: old_pass,
+                  hintText: 'Mật khẩu cũ',
+                  obscureText: true,
                 ),
                 const SizedBox(height: 40),
                 if (passwordError.isNotEmpty)
@@ -104,7 +109,7 @@ class _RegsterState extends State<Register> {
                   ),
                 Input(
                   controller: password,
-                  hintText: 'password',
+                  hintText: 'Mật khẩu mới',
                   obscureText: true,
                 ),
                 const SizedBox(height: 40),
@@ -121,33 +126,18 @@ class _RegsterState extends State<Register> {
                   ),
                 Input(
                   controller:conpassword,
-                  hintText: 'confirm password',
+                  hintText: 'xác nhận mật khẩu',
                   obscureText: true,
                 ),
                 SizedBox(height: 16.0),
                 const SizedBox(height: 10), // Khoảng cách chiều cao
 
-// forgot password?
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal:10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text(
-                          'Quay lại',
-                          style: TextStyle(color: Colors.blueAccent),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+
                 //button đăng nhập
                 const SizedBox(height: 25),
-                MyButtonSigup(onTap: registerUser),
+                MyButtonConfirm(onTap: () {
+                  registerUser(id);
+                }),
                 const SizedBox(height: 15),
               ],
             ),
@@ -202,7 +192,7 @@ class _RegsterState extends State<Register> {
             case 3:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Register()),
+                MaterialPageRoute(builder: (context) => ChanPass()),
               );
               break;
           }
@@ -212,7 +202,7 @@ class _RegsterState extends State<Register> {
   }
 
 
-  Future<void> registerUser() async {
+  Future<void> registerUser(String userId) async {
     // Clear any existing errors
     setState(() {
       emailError = '';
@@ -222,13 +212,7 @@ class _RegsterState extends State<Register> {
     });
 
     // Validate email
-    final bool isEmailValid = EmailValidator.validate(email.text);
-    if (!isEmailValid) {
-      setState(() {
-        emailError = 'Invalid email address.';
-      });
-      return; // Stop further processing if the email is not valid
-    }
+
 
     // Validate password strength
     passwordStrength = checkPasswordStrength(password.text);
@@ -247,14 +231,16 @@ class _RegsterState extends State<Register> {
       });
       return; // Stop further processing if the passwords do not match
     }
+    String old = md5.convert(utf8.encode(old_pass.text.trim())).toString();
     String hashedPassword = md5.convert(utf8.encode(password.text.trim())).toString();
     // If all validations pass, make the network call
-    final String url = "http://172.30.80.1/server/register.php";
+    final String url = "http://172.30.80.1/server/changlePassword.php";
     final response = await http.post(
       Uri.parse(url),
       body: {
-        'email': email.text,
-        'password': hashedPassword,
+        'userid': userId,
+        'old_password': old,
+        'new_password': hashedPassword,
       },
     );
 
@@ -297,6 +283,6 @@ class _RegsterState extends State<Register> {
     } else if (strength == 5) {
       return PasswordStrength.medium;
     }
-      return PasswordStrength.strong;
+    return PasswordStrength.strong;
   }
 }

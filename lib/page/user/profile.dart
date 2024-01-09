@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_news_app/page/admin/HomeAdmin.dart';
 import 'package:flutter_news_app/page/history/histories.dart';
 import 'package:flutter_news_app/page/home/news_page.dart';
+import 'package:flutter_news_app/page/user/ChanglePassword.dart';
 import 'package:flutter_news_app/page/user/edit.dart';
 import 'package:flutter_news_app/page/user/login.dart';
 import 'package:flutter_news_app/page/user/logout.dart';
@@ -31,12 +32,37 @@ class Profile extends StatefulWidget {
     final phone = widget.userData['phone'] ?? 'not yet provided';
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         title: Text(
           'Trang cá nhân',
           style: Theme.of(context).textTheme.headline4,
         ),
-        centerTitle: true, // This centers the title in the AppBar
+        centerTitle: true,
+        actions: <Widget>[
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              if (value == 'doi_mat_khau') {
+                // Hiển thị màn hình đổi mật khẩu khi người dùng chọn
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChanPass(),
+                  ),
+                );
+              }
+              // Xử lý các lựa chọn khác nếu cần
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              PopupMenuItem<String>(
+                value: 'doi_mat_khau',
+                child: ListTile(
+                  leading: Icon(Icons.settings),
+                  title: Text('Đổi mật khẩu'),
+                ),
+              ),
+              // Thêm các mục tùy chọn khác nếu cần
+            ],
+          ),
+        ],
       ),
       // Body of Scaffold where the rest of your UI would be defined
       body: SingleChildScrollView(
