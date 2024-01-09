@@ -4,7 +4,7 @@ import '../model/NewsArticle.dart';
 import 'package:xml/xml.dart' as xml;
 
 class NewsApi {
-  static String ip = "192.168.2.15";
+  static String ip = "172.30.80.1";
   static String urlGetAll ="http://$ip/server/getAllNews.php";
   static String urlArticleExistsInDatabase ="http://$ip/server/checkTitleAndCreate.php";
   static String urlSaveNewsArticle ="http://$ip/server/saveNews.php";

@@ -47,6 +47,17 @@ class _RegsterState extends State<Edit> {
     print(id);
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            // Your custom action, e.g., navigate to a desired page
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                builder: (context) => Profile(userData: userAuth.userData)),
+            );
+          },
+        ),
         centerTitle: true,
       ),
       backgroundColor: Colors.white,
@@ -169,7 +180,7 @@ class _RegsterState extends State<Edit> {
               final userAuth = Provider.of<UserAuth>(context, listen: false);
               if (userAuth.isLoggedIn) {
                 final isAdmin = userAuth.userData['isAdmin'] ?? 2;
-                if(isAdmin == 1){
+                if(isAdmin == 0 ){
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
@@ -178,7 +189,7 @@ class _RegsterState extends State<Edit> {
                   );
                 }
                 else{
-                  if(isAdmin== 0){
+                  if(isAdmin== 1){
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
@@ -212,7 +223,7 @@ class _RegsterState extends State<Edit> {
   }
 
   void updateUserProfile(String userId, UserAuth userAuth) async {
-    var url = Uri.parse('http://192.168.2.15/server/editUser.php');
+    var url = Uri.parse('http://172.30.80.1/server/editUser.php');
     var response = await http.post(url, body: {
       'id': userId,
       'name': this.name.text,

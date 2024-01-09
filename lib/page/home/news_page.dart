@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_news_app/page/history/SaveHistory.dart';
 import 'package:http/http.dart' as http;
 import 'package:xml2json/xml2json.dart';
 import 'package:flutter_news_app/page/admin/HomeAdmin.dart';
@@ -38,8 +39,12 @@ class _NewsPageState extends State<NewsPage> {
 
   @override
   void initState() {
-    selectedCategory = categoryItems[0];
     super.initState();
+    selectedCategory = categoryItems[0];
+    // Call the function to load the news for the selected category.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _onCategoryButtonPressed(0);
+    });
   }
 
   int _currentIndex = 0;
@@ -155,8 +160,8 @@ class _NewsPageState extends State<NewsPage> {
                 ),
               );
 
-              if (imagePath != null && description != null) {
-                insertHistory(id, imagePath, title);
+              if (imagePath != null && description != null && id!= null) {
+               SaveHistorry().insertHistory(id, imagePath, title) ;
               }
             },
             horizontalTitleGap: 10,
@@ -190,7 +195,6 @@ class _NewsPageState extends State<NewsPage> {
 
 // Categories Widget
   Widget _buildCategories() {
-   
     return SizedBox(
       height: 60,
       child: ListView.builder(
@@ -199,14 +203,11 @@ class _NewsPageState extends State<NewsPage> {
             padding: const EdgeInsets.all(8),
             child: ElevatedButton(
               onPressed: () {
-                setState(() async {
-                  selectedCategory = categoryItems[index];
-                  int indexx = categoryItems.indexOf(selectedCategory);
-                  _onCategoryButtonPressed(indexx);
-
-                  }
-
-                );
+                // Perform async operation outside of setState.
+                selectedCategory = categoryItems[index];
+                int indexx = categoryItems.indexOf(selectedCategory);
+                // Call the async function without trying to capture a void result.
+                _onCategoryButtonPressed(indexx);
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(
@@ -224,7 +225,8 @@ class _NewsPageState extends State<NewsPage> {
       ),
     );
   }
-  void _onCategoryButtonPressed(int indexx) async {
+
+  Future<void> _onCategoryButtonPressed(int indexx) async {
     try {
       String selectedCategory = Category.categories[indexx];
       List<NewsArticle> newsList = await NewsApi.getNewsByType(selectedCategory);
@@ -235,6 +237,7 @@ class _NewsPageState extends State<NewsPage> {
       print('Lỗi khi tải tin tức: $e');
     }
   }
+
 
   // Bottom Navigation Bar Widget
 
@@ -302,14 +305,14 @@ class _NewsPageState extends State<NewsPage> {
     final isAdmin = userAuth.userData['isAdmin'] ?? 2;
 
     if (userAuth.isLoggedIn) {
-      if (isAdmin == 1) {
+      if (isAdmin == 0) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => Profile(userData: userAuth.userData),
           ),
         );
-      } else if (isAdmin == 0) {
+      } else if (isAdmin == 1) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -332,30 +335,5 @@ class _NewsPageState extends State<NewsPage> {
     }
   }
 
-  // Other Function
 
-Future<void> insertHistory(
-      String id, String imageUrl, String title) async {
-    final uri = Uri.parse('http://192.168.2.15/server/history.php'); // URL to your PHP script
-    try {
-      final response = await http.post(uri, body: {
-        'user_id': id, // Make sure this matches the expected key in your PHP
-        'image': imageUrl,
-        'title': title,
-        'create_at': DateTime.now()
-            .toIso8601String(), // Sends the current date and time
-      });
-
-      if (response.statusCode == 200) {
-        // If the server returns an OK response, print the body
-        print('Response data: ${response.body}');
-      } else {
-        // If the server did not return a 200 OK response,
-        // throw an exception.
-        print('Failed to load data: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error sending data: $e');
-    }
-  }
 }

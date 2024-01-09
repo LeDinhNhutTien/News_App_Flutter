@@ -21,10 +21,7 @@ class UserAuth extends ChangeNotifier {
   }
 
   void updateUser(GoogleSignInAccount account) {
-
     this.user = User.fromGoogleAccount(account);
-
-
     notifyListeners();
   }
   void setLoggedIn(bool value, {Map<String, dynamic>? userData}) {

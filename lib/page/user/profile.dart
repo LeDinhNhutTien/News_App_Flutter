@@ -228,7 +228,7 @@ class Profile extends StatefulWidget {
               if (userAuth.isLoggedIn) {
                 final isAdmin = userAuth.userData['isAdmin'] ?? 0;
                 print(isAdmin);
-if(isAdmin == 1){
+if(isAdmin == 0){
   Navigator.pushReplacement(
     context,
     MaterialPageRoute(
@@ -237,7 +237,7 @@ if(isAdmin == 1){
   );
 }
 else{
-  if(isAdmin== 0){
+  if(isAdmin== 1){
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(

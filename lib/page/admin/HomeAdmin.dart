@@ -136,7 +136,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
               final userAuth = Provider.of<UserAuth>(context, listen: false);
               if (userAuth.isLoggedIn) {
                 final isAdmin = userAuth.userData['isAdmin'] ?? 0;
-                if(isAdmin == 1){
+                if(isAdmin == 0){
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
@@ -145,7 +145,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                   );
                 }
                 else{
-                  if(isAdmin== 0){
+                  if(isAdmin== 1){
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(

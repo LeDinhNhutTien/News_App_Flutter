@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_news_app/page/history/histories.dart';
 import 'package:flutter_news_app/page/home/news_page.dart';
 import 'package:flutter_news_app/page/user/Input.dart';
+import 'package:flutter_news_app/page/user/login.dart';
+import 'package:flutter_news_app/page/user/profile.dart';
 import 'package:flutter_news_app/page/widget/home_widget.dart';
 import 'package:flutter_news_app/page/widget/lottery.dart';
 import 'package:mailer/mailer.dart';
@@ -91,7 +93,17 @@ class _EmailOtpState extends State<EmailOtp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            // Your custom action, e.g., navigate to a desired page
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Login()),
+            );
+          },
+        ),
         title: Text('Quên mật khẩu'),
         centerTitle: true,
         titleSpacing: 0,
@@ -210,7 +222,7 @@ class _EmailOtpState extends State<EmailOtp> {
     );
   }
   Future<void> updatePassword(String newPass,String email) async {
-    final String url = "http://172.22.208.1/server/updatepassword.php";
+    final String url = "http://172.30.80.1/server/updatepassword.php";
     var response = await http.post(
       Uri.parse(url),
       body: {

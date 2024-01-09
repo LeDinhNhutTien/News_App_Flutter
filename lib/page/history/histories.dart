@@ -29,7 +29,7 @@ class _HistoriesState extends State<Histories> {
   }
 
   Future<void> fetchHistoriesByUserId(String userId) async {
-    final uri = Uri.parse('http://172.22.208.1/server/gethistory.php?user_id=$userId');
+    final uri = Uri.parse('http://172.30.80.1/server/gethistory.php?user_id=$userId');
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
@@ -113,7 +113,7 @@ class _HistoriesState extends State<Histories> {
               final userAuth = Provider.of<UserAuth>(context, listen: false);
               if (userAuth.isLoggedIn) {
                 final isAdmin = userAuth.userData['isAdmin'] ?? 2;
-                if(isAdmin == 1){
+                if(isAdmin == 0){
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
@@ -122,7 +122,7 @@ class _HistoriesState extends State<Histories> {
                   );
                 }
                 else{
-                  if(isAdmin== 0){
+                  if(isAdmin== 1){
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(

@@ -71,7 +71,7 @@ class _SignInDemoState extends State<SignInDemo> {
 
   void _startSignInAttempt() {
     if (_currentUser == null && !_isSigningIn) {
-      // Cancelling any existing timer
+
       _signInTimer?.cancel();
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -231,7 +231,7 @@ class _SignInDemoState extends State<SignInDemo> {
             if (userAuth.isLoggedIn) {
               final isAdmin = userAuth.userData['isAdmin'] ?? 2;
 
-              if(isAdmin == 1){
+              if(isAdmin == 0){
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
@@ -240,7 +240,7 @@ class _SignInDemoState extends State<SignInDemo> {
                 );
               }
               else{
-                if(isAdmin== 0){
+                if(isAdmin== 1){
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(

@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_news_app/page/history/SaveHistory.dart';
+import 'package:flutter_news_app/page/user/userauth.dart';
 import 'package:news_api_flutter_package/model/article.dart';
 import 'package:news_api_flutter_package/news_api_flutter_package.dart';
+import 'package:provider/provider.dart';
 
 import '../home/news_web_view.dart';
 
@@ -149,14 +152,21 @@ class _NewsForeignState extends State<NewsForeign> {
   }
 
   Widget _buildNewsItem(Article article){
+
     return InkWell(
       onTap: () {
+
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => NewsWebView(url: article.url!),
           ),
         );
+        final userAuth = Provider.of<UserAuth>(context, listen: false);
+        final id = userAuth.userData['id'].toString();
+        if(id != null){
+         SaveHistorry().insertHistory(id, article.urlToImage ?? "", article.title ?? "");
+        }
 
       },
       child: Card(
@@ -169,7 +179,9 @@ class _NewsForeignState extends State<NewsForeign> {
               SizedBox(
                 height: 80,
                 width: 80,
+
                 child: Image.network(article.urlToImage ?? "",
+
                   fit:  BoxFit.fitHeight,
                   errorBuilder: (context, error, stackTrace){
                     return const Icon(Icons.image_not_supported);
@@ -193,6 +205,7 @@ class _NewsForeignState extends State<NewsForeign> {
                     ],
                   ))
             ],
+
           ),),
       ),
     );

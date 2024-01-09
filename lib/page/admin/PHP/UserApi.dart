@@ -7,7 +7,7 @@ import 'package:xml/xml.dart' as xml;
 
 
 class UserApi {
-  static String ip = "192.168.2.15";
+  static String ip = "172.30.80.1";
   static String urlGetAllUser = "http://$ip/server/getAllUser.php";
   static String urlSaveUser = "http://$ip/server/saveUser.php";
   static String urlDeleteUser = "http://$ip/server/deleteUser.php";
